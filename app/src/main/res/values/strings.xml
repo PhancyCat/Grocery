@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">GroceryList</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -7,4 +9,6 @@
     <string name="title_activity_item_page">ItemPage</string>
     <string name="title_activity_search_results">SearchResults</string>
     <string name="title_activity_store_results">StoreResults</string>
+    <string name="title_activity_map">Map</string>
+
 </resources>

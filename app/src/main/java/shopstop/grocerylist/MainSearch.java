@@ -2,6 +2,7 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import com.google.zxing.integration.android.*;
+
 
 
 public class MainSearch extends Activity {
@@ -33,12 +36,19 @@ public class MainSearch extends Activity {
             Log.d("Bundle Check", "Activity was passed nothing");
         }
 
+        final Activity act = this;
 
-        Button scanButton = (Button) findViewById(R.id.barcode);
+
+        final Button scanButton = (Button) findViewById(R.id.barcode);
         scanButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), ScannerResults.class);
-                startActivity(intent);
+                IntentIntegrator integrator = new IntentIntegrator(act);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                integrator.setPrompt("Scan a barcode");
+                integrator.setResultDisplayDuration(0);
+                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+                integrator.setCameraId(0);  // Use a specific camera of the device
+                integrator.initiateScan();
             }
         });
 
