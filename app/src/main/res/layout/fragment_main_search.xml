@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainSearch$PlaceholderFragment"
+    android:id="@+id/groceryMainLayout">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="right"
+        android:background="@drawable/background_box"
+        android:id="@+id/topMenu">
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/addPrice"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/barcode"
+            android:layout_toStartOf="@+id/barcode"
+            android:textColor="@color/main_green" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|||"
+            android:id="@+id/barcode"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/main_green" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Find: "
+        android:id="@+id/findLabel"
+        android:layout_below="@+id/topMenu"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="64dp"
+        android:textColor="@color/main_green" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/findItemName"
+        android:width="200dp"
+        android:hint="Item Name"
+        android:layout_alignTop="@+id/findLabel"
+        android:layout_toRightOf="@+id/nearLabel"
+        android:layout_toEndOf="@+id/nearLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Near: "
+        android:id="@+id/nearLabel"
+        android:layout_below="@+id/findLabel"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/main_green" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/location"
+        android:width="200dp"
+        android:hint="Location"
+        android:layout_alignTop="@+id/nearLabel"
+        android:layout_alignLeft="@+id/findItemName"
+        android:layout_alignStart="@+id/findItemName" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Distance: "
+        android:id="@+id/distLabel"
+        android:textColor="@color/main_green"
+        android:layout_below="@+id/location"
+        android:layout_alignLeft="@+id/nearLabel"
+        android:layout_alignStart="@+id/nearLabel"
+        android:layout_marginTop="54dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText2"
+        android:width="300dp"
+        android:hint="Maximum Distance"
+        android:layout_alignTop="@+id/distLabel"
+        android:layout_alignLeft="@+id/distLabel"
+        android:layout_alignStart="@+id/distLabel"
+        android:layout_marginTop="33dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:id="@+id/searchButton"
+        android:layout_marginBottom="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:width="150dp"
+        android:textColor="@color/main_green" />
+
+</RelativeLayout>
