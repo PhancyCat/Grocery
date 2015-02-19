@@ -50,13 +50,13 @@ public class MainSearch extends Activity {
             }
         });
 
-        Button searchButton = (Button) findViewById(R.id.barcode);
-        /*searchButton.setOnClickListener(new View.OnClickListener() {
+        Button searchButton = (Button) findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), .class);
+                Intent intent = new Intent(getApplication(), SearchResults.class);
                 startActivity(intent);
             }
-        });*/
+        });
     }
 
 

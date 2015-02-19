@@ -73,7 +73,7 @@ public class StoreResults extends ActionBarActivity {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                     Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
 // Then you start a new Activity via Intent
-                    Intent intent = new Intent(listView.getContext(), StoreResults.class);
+                    Intent intent = new Intent(listView.getContext(), ItemPage.class);
                     intent.putExtra("position", position);
 // Or / And
                     intent.putExtra("id", id);

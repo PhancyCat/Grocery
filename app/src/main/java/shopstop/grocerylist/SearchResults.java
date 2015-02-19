@@ -69,12 +69,14 @@ public class SearchResults extends ActionBarActivity {
             adapter = new ArrayAdapter<String>(getActivity(),
                     R.layout.list_item_results, R.id.list_item_results_textview, weekForecast);
             final ListView listView = (ListView) rootView.findViewById(R.id.listview_results);
-            listView.setAdapter(adapter);
+            if (listView != null) {
+                listView.setAdapter(adapter);
+            }
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                     Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
 // Then you start a new Activity via Intent
-                    Intent intent = new Intent(listView.getContext(), ItemPage.class);
+                    Intent intent = new Intent(listView.getContext(), StoreResults.class);
                     intent.putExtra("position", position);
 // Or / And
                     intent.putExtra("id", id);
