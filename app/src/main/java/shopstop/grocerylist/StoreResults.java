@@ -55,6 +55,9 @@ public class StoreResults extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_store_results, container, false);
+            ArrayList<Item> items = new ArrayList<Item>();
+            Item temp = new Item("Eggs", 3, 2.00);
+            items.add(temp);
             String[] data = {
                     "Mon 6/23 - Sunny - 31/17",
                     "Tue 6/24 - Foggy - 21/8",
@@ -66,9 +69,10 @@ public class StoreResults extends ActionBarActivity {
             };
             List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
             adapter = new ArrayAdapter<String>(getActivity(),
-                    R.layout.list_item_results, R.id.list_item_results_textview, weekForecast);
-            final ListView listView = (ListView) rootView.findViewById(R.id.listview_results);
-            listView.setAdapter(adapter);
+                    R.layout.list_store_results, R.id.list_store_results_textview, weekForecast);
+            final ListView listView = (ListView) rootView.findViewById(R.id.listview_store_results);
+            //listView.setAdapter(adapter);
+            listView.setAdapter(new ItemAdapter(getActivity(), items));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                     Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);

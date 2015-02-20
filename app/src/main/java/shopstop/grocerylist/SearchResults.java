@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,13 +19,12 @@ import android.widget.ListView;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import shopstop.grocerylist.tasks.SearchTask;
 
 public class SearchResults extends ActionBarActivity {
-    List<String> stores = new ArrayList<String>();
+    ArrayList<Store> stores = new ArrayList<Store>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,7 @@ public class SearchResults extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        ListView listview = (ListView) findViewById(R.id.listview_item_results);
     }
 
     @Override
@@ -56,15 +55,13 @@ public class SearchResults extends ActionBarActivity {
 
                 // Add stores to list
                 for (ParseObject store : parseObjects) {
-                    stores.add(store.get("name").toString() + " - " + store.get("address").toString());
+                    stores.add(new Store(store.get("name").toString(), store.get("address").toString(), 0.25));
                 }
 
                 // List adapter stuff, change as necessary
-                final ListView listView = (ListView) findViewById(R.id.listview_results);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(act,
-                        R.layout.list_item_results, R.id.list_item_results_textview, stores);
+                final ListView listView = (ListView) findViewById(R.id.listview_item_results);
 
-                listView.setAdapter(adapter);
+                listView.setAdapter(new StoreAdapter(act, stores));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                         Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
@@ -115,6 +112,42 @@ public class SearchResults extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
+            /*
+            ArrayList<Store> items = new ArrayList<Store>();
+
+            Store temp = new Store("albertsons", "Here", 0.23);
+            items.add(temp);
+            temp = new Store("lol", "lol", 3.45);
+            items.add(temp);
+            String[] data = {
+                    "Mon 6/23 - Sunny - 31/17",
+                    "Tue 6/24 - Foggy - 21/8",
+                    "Wed 6/25 - Cloudy - 22/17",
+                    "Thurs 6/26 - Rainy - 18/11",
+                    "Fri 6/27 - Foggy - 21/10",
+                    "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
+                    "Sun 6/29 - Sunny - 20/7"
+            };
+            List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+            adapter = new ArrayAdapter<String>(getActivity(),
+                    R.layout.list_item_results, R.id.list_item_results_textview, weekForecast);
+            final ListView listView = (ListView) rootView.findViewById(R.id.listview_item_results);
+            if (listView != null) {
+                //listView.setAdapter(adapter);
+                listView.setAdapter(new StoreAdapter(getActivity(), items));
+            }
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+                    Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
+// Then you start a new Activity via Intent
+                    Intent intent = new Intent(listView.getContext(), StoreResults.class);
+                    intent.putExtra("position", position);
+// Or / And
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                }
+            });
+            */
             return rootView;
         }
     }
