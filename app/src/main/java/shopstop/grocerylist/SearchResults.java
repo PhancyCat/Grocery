@@ -26,7 +26,7 @@ public class SearchResults extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        ListView listview = (ListView) findViewById(R.id.listview_results);
+        ListView listview = (ListView) findViewById(R.id.listview_item_results);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,6 +56,11 @@ public class SearchResults extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
+            ArrayList<Store> items = new ArrayList<Store>();
+            Store temp = new Store("albertsons", "Here", 0.23);
+            items.add(temp);
+            temp = new Store("lol", "lol", 3.45);
+            items.add(temp);
             String[] data = {
                     "Mon 6/23 - Sunny - 31/17",
                     "Tue 6/24 - Foggy - 21/8",
@@ -68,9 +73,10 @@ public class SearchResults extends ActionBarActivity {
             List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
             adapter = new ArrayAdapter<String>(getActivity(),
                     R.layout.list_item_results, R.id.list_item_results_textview, weekForecast);
-            final ListView listView = (ListView) rootView.findViewById(R.id.listview_results);
+            final ListView listView = (ListView) rootView.findViewById(R.id.listview_item_results);
             if (listView != null) {
-                listView.setAdapter(adapter);
+                //listView.setAdapter(adapter);
+                listView.setAdapter(new StoreAdapter(getActivity(), items));
             }
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
