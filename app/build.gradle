@@ -32,6 +32,9 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:appcompat-v7:21.0.3'
 
+    compile 'com.parse.bolts:bolts-android:1.1.4'
+    compile fileTree(dir: '../libs', include: 'Parse-*.jar')
+
     // Supports Android 2.1 and later (API level 7), but not optimal for later Android versions.
     // If you only plan on supporting Android 4.0.3 and up, you don't need to include this.
     compile 'com.journeyapps:zxing-android-legacy:2.0.1@aar'

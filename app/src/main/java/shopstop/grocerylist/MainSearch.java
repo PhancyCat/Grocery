@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import com.google.zxing.integration.android.*;
+import com.parse.Parse;
 
 
 
@@ -38,6 +40,9 @@ public class MainSearch extends Activity {
 
         final Activity act = this;
 
+        // Initialize Parse
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "F9eyFqMsPkNv18Xo9w4h9K7wya49YIbiTFcV1fny", "ZV4SwkGbpNbT9EpIqgw7WfMQSb7w7ocIZicSSb4y");
 
         final Button scanButton = (Button) findViewById(R.id.barcode);
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +69,7 @@ public class MainSearch extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), SearchResults.class);
+                intent.putExtra("itemName", "Juice"); // Set the item to search for
                 startActivity(intent);
             }
         });
