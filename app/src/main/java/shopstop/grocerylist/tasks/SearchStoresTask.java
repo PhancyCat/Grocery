@@ -15,11 +15,11 @@ import shopstop.grocerylist.ParseQueryHandler;
 /**
  * Created by Josephine on 2/19/2015.
  */
-public class SearchTask extends AsyncTask<String, String, String> {
+public class SearchStoresTask extends AsyncTask<String, String, String> {
     private ParseQueryHandler handler;
     private String itemName;
 
-    public SearchTask(ParseQueryHandler handler, String itemName) {
+    public SearchStoresTask(ParseQueryHandler handler, String itemName) {
         this.handler = handler;
         this.itemName = itemName;
     }

@@ -2,7 +2,6 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,8 +16,7 @@ import com.parse.ParseObject;
 import shopstop.grocerylist.datatypes.Item;
 import shopstop.grocerylist.datatypes.Price;
 import shopstop.grocerylist.datatypes.Store;
-import shopstop.grocerylist.tasks.AddTask;
-import shopstop.grocerylist.tasks.SearchTask;
+import shopstop.grocerylist.tasks.AddPriceTask;
 
 
 public class AddItem extends Activity {
@@ -32,8 +30,6 @@ public class AddItem extends Activity {
         final ParseObjectHandler handler = new ParseObjectHandler() {
             @Override
             public void onCallComplete(ParseObject parseObject) {
-//                Intent intent = new Intent(getApplication(), MainSearch.class);
-//                startActivity(intent);
                 finish();
             }
         };
@@ -47,7 +43,7 @@ public class AddItem extends Activity {
                 Price price = new Price(3, 99, false, item, store);
 
                 // Add the price
-                AddTask task = new AddTask(handler, price);
+                AddPriceTask task = new AddPriceTask(handler, price);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
