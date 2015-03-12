@@ -26,9 +26,8 @@ public class AddPriceTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         final ParseObject priceObject = ParseObject.create("Price");
 
-        priceObject.put("dollars", price.dollars);
-        priceObject.put("cents", price.cents);
-        priceObject.put("isOnSale", price.isOnSale);
+        priceObject.put("amount", price.getAmount());
+        priceObject.put("isOnSale", price.getIsOnSale());
 
         final ParseObjectHandler storeHandler = new ParseObjectHandler() {
             @Override
@@ -56,12 +55,12 @@ public class AddPriceTask extends AsyncTask<String, String, String> {
             public void onCallComplete(ParseObject parseObject) {
                 priceObject.put("item", parseObject);
 
-                AddStoreTask storeTask = new AddStoreTask(storeHandler, price.store);
+                AddStoreTask storeTask = new AddStoreTask(storeHandler, price.getStore());
                 storeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         };
 
-        AddItemTask itemTask = new AddItemTask(itemHandler, price.item);
+        AddItemTask itemTask = new AddItemTask(itemHandler, price.getItem());
         itemTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         return null;

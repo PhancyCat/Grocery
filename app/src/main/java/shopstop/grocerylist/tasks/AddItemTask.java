@@ -28,9 +28,9 @@ public class AddItemTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         ParseQuery<ParseObject> itemQuery = ParseQuery.getQuery("Item");
 
-        itemQuery.whereEqualTo("name", item.name);
-        itemQuery.whereEqualTo("unitName", item.unitName);
-        itemQuery.whereEqualTo("unitCount", item.unitCount);
+        itemQuery.whereEqualTo("name", item.getName());
+        itemQuery.whereEqualTo("unitName", item.getUnitName());
+        itemQuery.whereEqualTo("unitCount", item.getUnitCount());
 
         itemQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -44,10 +44,10 @@ public class AddItemTask extends AsyncTask<String, String, String> {
                     if (e.getCode() == ParseException.OBJECT_NOT_FOUND) {
                         final ParseObject itemObject = ParseObject.create("Item");
 
-                        itemObject.put("name", item.name);
-                        itemObject.put("tags", item.tags());
-                        itemObject.put("unitName", item.unitName);
-                        itemObject.put("unitCount", item.unitCount);
+                        itemObject.put("name", item.getName());
+                        itemObject.put("tags", item.getTags());
+                        itemObject.put("unitName", item.getUnitName());
+                        itemObject.put("unitCount", item.getUnitCount());
 
                         itemObject.saveInBackground(new SaveCallback() {
                             @Override

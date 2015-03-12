@@ -39,8 +39,8 @@ public class AddItem extends Activity {
             public void onClick(View v) {
 
                 Store store = new Store("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
-                Item item = new Item("Juice", "oz", 12.0);
-                Price price = new Price(3, 99, false, item, store);
+                Item item = new Item("Juice", "oz", "12.0");
+                Price price = new Price("3.99", false, item, store);
 
                 // Add the price
                 AddPriceTask task = new AddPriceTask(handler, price);

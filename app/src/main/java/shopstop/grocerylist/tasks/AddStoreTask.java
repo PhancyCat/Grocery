@@ -28,8 +28,8 @@ public class AddStoreTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         ParseQuery<ParseObject> storeQuery = ParseQuery.getQuery("Store");
 
-        storeQuery.whereEqualTo("name", store.name);
-        storeQuery.whereEqualTo("address", store.address);
+        storeQuery.whereEqualTo("name", store.getName());
+        storeQuery.whereEqualTo("address", store.getAddress());
 
         storeQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -43,8 +43,8 @@ public class AddStoreTask extends AsyncTask<String, String, String> {
                     if (e.getCode() == ParseException.OBJECT_NOT_FOUND) {
                         final ParseObject storeObject = ParseObject.create("Store");
 
-                        storeObject.put("name", store.name);
-                        storeObject.put("address", store.address);
+                        storeObject.put("name", store.getName());
+                        storeObject.put("address", store.getAddress());
                         // TODO: Geocoding
                         // storeObject.put("coordinate", ...);
 
