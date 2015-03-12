@@ -18,9 +18,9 @@ import android.widget.ListView;
 
 import com.parse.ParseObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import shopstop.grocerylist.parse.*;
 import shopstop.grocerylist.tasks.SearchTask;
 
 public class SearchResults extends ActionBarActivity {
@@ -53,9 +53,11 @@ public class SearchResults extends ActionBarActivity {
             public void onCallComplete(List<ParseObject> parseObjects) {
                 System.err.println("----- call complete -----");
 
+                Map<ParseStore, Map<ParseItem, ParseObject>> results = groupResults(parseObjects);
+
                 // Add stores to list
-                for (ParseObject store : parseObjects) {
-                    stores.add(new Store(store.get("name").toString(), store.get("address").toString(), 0.25));
+                for (ParseStore store : results.keySet()) {
+                    stores.add(new Store(store.getName(), store.getAddress(), 0.25));
                 }
 
                 // List adapter stuff, change as necessary
@@ -64,7 +66,7 @@ public class SearchResults extends ActionBarActivity {
                 listView.setAdapter(new StoreAdapter(act, stores));
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-                        Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
+                        Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
 
                         Intent intent = new Intent(listView.getContext(), StoreResults.class);
 
@@ -78,22 +80,46 @@ public class SearchResults extends ActionBarActivity {
         };
 
         // Start the query
-        SearchTask task = new SearchTask(handler, itemName);
+        SearchTask task = new SearchTask(handler, itemName, null, null);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private Map<ParseStore, Map<ParseItem, ParseObject>> groupResults(List<ParseObject> parseObjects) {
+        Map<ParseStore, Map<ParseItem, ParseObject>> storeMap = new HashMap<>();
+
+        for (ParseObject price : parseObjects) {
+            ParseStore store = new ParseStore(price.getParseObject("store"));
+            ParseItem item = new ParseItem(price.getParseObject("item"));
+
+            if (storeMap.containsKey(store)) {
+                Map<ParseItem, ParseObject> itemMap = storeMap.get(store);
+                if (!itemMap.containsKey(item)) {
+                    itemMap.put(item, price); // Only put the most recent price for an item
+                }
+            }
+            else {
+                Map<ParseItem, ParseObject> itemMap = new HashMap<>();
+                itemMap.put(item, price);
+
+                storeMap.put(store, itemMap);
+            }
+        }
+
+        return storeMap;
+    };
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_results, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-// Handle action bar item clicks here. The action bar will
-// automatically handle clicks on the Home/Up button, so long
-// as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -113,11 +139,11 @@ public class SearchResults extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_search_results, container, false);
             /*
-            ArrayList<Store> items = new ArrayList<Store>();
+            ArrayList<ParseStore> items = new ArrayList<ParseStore>();
 
-            Store temp = new Store("albertsons", "Here", 0.23);
+            ParseStore temp = new ParseStore("albertsons", "Here", 0.23);
             items.add(temp);
-            temp = new Store("lol", "lol", 3.45);
+            temp = new ParseStore("lol", "lol", 3.45);
             items.add(temp);
             String[] data = {
                     "Mon 6/23 - Sunny - 31/17",
@@ -138,7 +164,7 @@ public class SearchResults extends ActionBarActivity {
             }
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-                    Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
+                    Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
 // Then you start a new Activity via Intent
                     Intent intent = new Intent(listView.getContext(), StoreResults.class);
                     intent.putExtra("position", position);

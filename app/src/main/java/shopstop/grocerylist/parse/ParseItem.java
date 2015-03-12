@@ -1,8 +1,6 @@
-package shopstop.grocerylist.datatypes;
+package shopstop.grocerylist.parse;
 
 import com.parse.ParseObject;
-
-import org.json.JSONArray;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,12 +9,12 @@ import java.util.List;
 /**
  * Created by Josephine on 2/18/2015.
  */
-public class Item {
+public class ParseItem {
     private String name;
     private String unitName;
     private BigDecimal unitCount;
 
-    public Item(String name, String unitName, String unitCount) {
+    public ParseItem(String name, String unitName, String unitCount) {
         this.name = name;
         this.unitName = unitName;
 
@@ -28,7 +26,7 @@ public class Item {
         }
     }
 
-    public Item(ParseObject parseObject) {
+    public ParseItem(ParseObject parseObject) {
         this.name = parseObject.getString("name");
         this.unitName = parseObject.getString("unitName");
         this.unitCount = new BigDecimal(parseObject.getString("unitCount"));
@@ -47,7 +45,7 @@ public class Item {
     }
 
     public List<String> getTags() {
-        return Item.getTags(this.name);
+        return ParseItem.getTags(this.name);
     }
 
     public static List<String> getTags(String name) {
@@ -60,7 +58,7 @@ public class Item {
 
     @Override
     public boolean equals(Object o) {
-        Item other = (Item) o;
+        ParseItem other = (ParseItem) o;
         return name.equals(other.name) &&
                 unitName.equals(other.unitName) &&
                 unitCount.equals(other.unitCount);

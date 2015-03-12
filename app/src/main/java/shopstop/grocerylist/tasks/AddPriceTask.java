@@ -7,17 +7,17 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
-import shopstop.grocerylist.ParseObjectHandler;
-import shopstop.grocerylist.datatypes.Price;
+import shopstop.grocerylist.parse.ParseObjectHandler;
+import shopstop.grocerylist.parse.ParsePrice;
 
 /**
  * Created by Josephine on 2/19/2015.
  */
 public class AddPriceTask extends AsyncTask<String, String, String> {
     private ParseObjectHandler handler;
-    private Price price;
+    private ParsePrice price;
 
-    public AddPriceTask(ParseObjectHandler handler, Price price) {
+    public AddPriceTask(ParseObjectHandler handler, ParsePrice price) {
         this.handler = handler;
         this.price = price;
     }

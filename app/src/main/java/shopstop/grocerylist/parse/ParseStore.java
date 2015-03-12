@@ -1,20 +1,20 @@
-package shopstop.grocerylist.datatypes;
+package shopstop.grocerylist.parse;
 
 import com.parse.ParseObject;
 
 /**
  * Created by Josephine on 2/18/2015.
  */
-public class Store {
+public class ParseStore {
     private String name;
     private String address;
 
-    public Store(String name, String address) {
+    public ParseStore(String name, String address) {
         this.name = name;
         this.address = address;
     }
 
-    public Store(ParseObject parseObject) {
+    public ParseStore(ParseObject parseObject) {
         this.name = parseObject.getString("name");
         this.address = parseObject.getString("address");
     }
@@ -29,7 +29,7 @@ public class Store {
 
     @Override
     public boolean equals(Object o) {
-        Store other = (Store) o;
+        ParseStore other = (ParseStore) o;
         return name.equals(other.name) &&
                 address.equals(other.address);
     }

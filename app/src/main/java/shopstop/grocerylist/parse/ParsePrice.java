@@ -1,18 +1,18 @@
-package shopstop.grocerylist.datatypes;
+package shopstop.grocerylist.parse;
 
 import java.math.BigDecimal;
 
 /**
  * Created by Josephine on 2/18/2015.
  */
-public class Price {
+public class ParsePrice {
     private BigDecimal amount;
     private boolean isOnSale;
 
-    private Item item;
-    private Store store;
+    private ParseItem item;
+    private ParseStore store;
 
-    public Price(String amount, boolean isOnSale, Item item, Store store) {
+    public ParsePrice(String amount, boolean isOnSale, ParseItem item, ParseStore store) {
         this.amount = new BigDecimal(amount);
         this.isOnSale = isOnSale;
         this.item = item;
@@ -27,11 +27,11 @@ public class Price {
         return isOnSale;
     }
 
-    public Item getItem() {
+    public ParseItem getItem() {
         return item;
     }
 
-    public Store getStore() {
+    public ParseStore getStore() {
         return store;
     }
 }

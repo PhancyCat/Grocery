@@ -9,17 +9,17 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
-import shopstop.grocerylist.ParseObjectHandler;
-import shopstop.grocerylist.datatypes.Item;
+import shopstop.grocerylist.parse.ParseObjectHandler;
+import shopstop.grocerylist.parse.ParseItem;
 
 /**
  * Created by Josephine on 3/11/2015.
  */
 public class AddItemTask extends AsyncTask<String, String, String> {
     private ParseObjectHandler handler;
-    private Item item;
+    private ParseItem item;
 
-    public AddItemTask(ParseObjectHandler handler, Item item) {
+    public AddItemTask(ParseObjectHandler handler, ParseItem item) {
         this.handler = handler;
         this.item = item;
     }

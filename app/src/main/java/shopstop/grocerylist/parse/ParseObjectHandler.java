@@ -1,4 +1,4 @@
-package shopstop.grocerylist;
+package shopstop.grocerylist.parse;
 
 import com.parse.ParseObject;
 

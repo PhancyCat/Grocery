@@ -13,9 +13,10 @@ import android.widget.Button;
 
 import com.parse.ParseObject;
 
-import shopstop.grocerylist.datatypes.Item;
-import shopstop.grocerylist.datatypes.Price;
-import shopstop.grocerylist.datatypes.Store;
+import shopstop.grocerylist.parse.ParseItem;
+import shopstop.grocerylist.parse.ParseObjectHandler;
+import shopstop.grocerylist.parse.ParsePrice;
+import shopstop.grocerylist.parse.ParseStore;
 import shopstop.grocerylist.tasks.AddPriceTask;
 
 
@@ -38,9 +39,9 @@ public class AddItem extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Store store = new Store("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
-                Item item = new Item("Juice", "oz", "12.0");
-                Price price = new Price("3.99", false, item, store);
+                ParseStore store = new ParseStore("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
+                ParseItem item = new ParseItem("Juice", "oz", "12.0");
+                ParsePrice price = new ParsePrice("3.99", false, item, store);
 
                 // Add the price
                 AddPriceTask task = new AddPriceTask(handler, price);
