@@ -9,9 +9,9 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 
 
-public class Map extends ActionBarActivity {
+public class StoreMap extends ActionBarActivity {
 
-    private GoogleMap map;
+    private com.google.android.gms.maps.GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -25,7 +25,7 @@ public class ItemPage extends ActionBarActivity {
         Button mapButton = (Button) findViewById(R.id.mapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), Map.class);
+                Intent intent = new Intent(getApplication(), StoreMap.class);
                 startActivity(intent);
             }
         });
