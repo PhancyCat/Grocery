@@ -1,6 +1,8 @@
 package shopstop.grocerylist;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -13,9 +15,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import shopstop.grocerylist.parse.ParseItem;
+import shopstop.grocerylist.parse.ParseItemPriceComparator;
+import shopstop.grocerylist.parse.ParsePrice;
+import shopstop.grocerylist.parse.ParseQueryHandler;
+import shopstop.grocerylist.tasks.SearchStoreTask;
+import shopstop.grocerylist.tasks.SearchTask;
 
 public class StoreResults extends ActionBarActivity {
     @Override
@@ -27,6 +44,80 @@ public class StoreResults extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        final Activity act = this;
+
+        final String itemName = getIntent().getStringExtra("itemName");
+        final String storeName = getIntent().getStringExtra("storeName");
+        final String storeAddress = getIntent().getStringExtra("storeAddress");
+
+        ParseQueryHandler handler = new ParseQueryHandler() {
+            @Override
+            public void onCallComplete(List<ParseObject> parseObjects) {
+                System.err.println("----- call complete -----");
+
+                List<ParseItem> results = groupResults(parseObjects);
+                List<Item> items = new ArrayList<>();
+                
+                Collections.sort(results, new ParseItemPriceComparator());
+
+                // Add items to list
+                for (ParseItem item : results) {
+                    items.add(new Item(item.getName(), item.getUnitCount(), item.getUnitName(),
+                            item.getPrice()));
+                }
+
+                final ListView listView = (ListView) findViewById(R.id.listview_store_results);
+
+                listView.setAdapter(new ItemAdapter(act, items));
+                /*
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+                        Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
+                        // Then you start a new Activity via Intent
+                        Intent intent = new Intent(listView.getContext(), ItemPage.class);
+                        intent.putExtra("position", position);
+                        // Or / And
+                        intent.putExtra("id", id);
+                        startActivity(intent);
+                    }
+                });
+                */
+            }
+        };
+
+        // Start the query
+        SearchStoreTask task = new SearchStoreTask(handler, itemName, storeName, storeAddress);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private List<ParseItem> groupResults(List<ParseObject> parseObjects) {
+        List<ParseItem> results = new ArrayList<>();
+        Set<ParseItem> itemSet = new HashSet<>();
+
+        try {
+            for (ParseObject price : parseObjects) {
+                ParseObject itemObject = price.getParseObject("item");
+                itemObject.fetchIfNeeded();
+                ParseItem item = new ParseItem(itemObject);
+
+                if (!itemSet.contains(item)) {
+                    itemSet.add(item);
+                    item.setPrice(new BigDecimal(price.getString("amount")));
+                    results.add(item);
+                }
+            }
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return results;
     }
 
     @Override
@@ -59,35 +150,6 @@ public class StoreResults extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_store_results, container, false);
-            ArrayList<Item> items = new ArrayList<Item>();
-            Item temp = new Item("Eggs", 3, 2.00);
-            items.add(temp);
-            String[] data = {
-                    "Mon 6/23 - Sunny - 31/17",
-                    "Tue 6/24 - Foggy - 21/8",
-                    "Wed 6/25 - Cloudy - 22/17",
-                    "Thurs 6/26 - Rainy - 18/11",
-                    "Fri 6/27 - Foggy - 21/10",
-                    "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                    "Sun 6/29 - Sunny - 20/7"
-            };
-            List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-            adapter = new ArrayAdapter<String>(getActivity(),
-                    R.layout.list_store_results, R.id.list_store_results_textview, weekForecast);
-            final ListView listView = (ListView) rootView.findViewById(R.id.listview_store_results);
-            //listView.setAdapter(adapter);
-            listView.setAdapter(new ItemAdapter(getActivity(), items));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-                    Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
-                    // Then you start a new Activity via Intent
-                    Intent intent = new Intent(listView.getContext(), ItemPage.class);
-                    intent.putExtra("position", position);
-                    // Or / And
-                    intent.putExtra("id", id);
-                    startActivity(intent);
-                }
-            });
             return rootView;
         }
     }

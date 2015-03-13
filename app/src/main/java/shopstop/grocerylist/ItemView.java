@@ -43,7 +43,7 @@ public class ItemView extends RelativeLayout {
 
     public void setItem(Item item) {
         mNameView.setText(item.getName());
-        mQuantityView.setText(item.getQuantity().toString());
+        mQuantityView.setText(item.getQuantity().toString() + " " + item.getUnit());
         mPriceView.setText(item.getPrice().toString());
     }
 

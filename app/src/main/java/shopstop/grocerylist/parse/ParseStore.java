@@ -43,7 +43,7 @@ public class ParseStore {
 
     public void setMinPrice(BigDecimal other) {
         if (minPrice == null || other.compareTo(minPrice) < 0) {
-            this.minPrice = other;
+            minPrice = other;
         }
     }
 

@@ -13,6 +13,7 @@ public class ParseItem {
     private String name;
     private String unitName;
     private BigDecimal unitCount;
+    private BigDecimal price;
 
     public ParseItem(String name, String unitName, String unitCount) {
         this.name = name;
@@ -40,8 +41,12 @@ public class ParseItem {
         return unitName;
     }
 
-    public String getUnitCount() {
-        return unitCount.toString();
+    public BigDecimal getUnitCount() {
+        return unitCount;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 
     public List<String> getTags() {
@@ -54,6 +59,12 @@ public class ParseItem {
             list.add(tag.trim());
         }
         return list;
+    }
+
+    public void setPrice(BigDecimal other) {
+        if (price == null || other.compareTo(price) < 0) {
+            price = other;
+        }
     }
 
     @Override
