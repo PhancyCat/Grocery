@@ -16,6 +16,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 public class StoreResults extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +28,26 @@ public class StoreResults extends ActionBarActivity {
                     .commit();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_store_results, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-// Handle action bar item clicks here. The action bar will
-// automatically handle clicks on the Home/Up button, so long
-// as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -75,11 +79,11 @@ public class StoreResults extends ActionBarActivity {
             listView.setAdapter(new ItemAdapter(getActivity(), items));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-                    Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
-// Then you start a new Activity via Intent
+                    Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
+                    // Then you start a new Activity via Intent
                     Intent intent = new Intent(listView.getContext(), ItemPage.class);
                     intent.putExtra("position", position);
-// Or / And
+                    // Or / And
                     intent.putExtra("id", id);
                     startActivity(intent);
                 }
