@@ -16,8 +16,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 
 import shopstop.grocerylist.parse.*;
@@ -45,7 +48,12 @@ public class SearchResults extends ActionBarActivity {
         final Activity act = this;
 
         // Get the item to search for
-        String itemName = getIntent().getStringExtra("itemName");
+        final String itemName = getIntent().getStringExtra("itemName");
+        final double latitude = getIntent().getDoubleExtra("latitude", 0);
+        final double longitude = getIntent().getDoubleExtra("longitude", 0);
+        final double radius = getIntent().getDoubleExtra("radius", 10);
+
+        final ParseGeoPoint coordinate = new ParseGeoPoint(latitude, longitude);
 
         // Handle the query results
         ParseQueryHandler handler = new ParseQueryHandler() {
@@ -53,11 +61,13 @@ public class SearchResults extends ActionBarActivity {
             public void onCallComplete(List<ParseObject> parseObjects) {
                 System.err.println("----- call complete -----");
 
-                Map<ParseStore, Map<ParseItem, ParseObject>> results = groupResults(parseObjects);
+                final List<ParseStore> results = groupResults(parseObjects, coordinate);
 
                 // Add stores to list
-                for (ParseStore store : results.keySet()) {
-                    stores.add(new Store(store.getName(), store.getAddress(), 0.25));
+                for (ParseStore store : results) {
+                    Store temp = new Store(store.getName(), store.getAddress(),
+                            store.getDistance(), store.getMinPrice());
+                    stores.add(temp);
                 }
 
                 // List adapter stuff, change as necessary
@@ -73,6 +83,9 @@ public class SearchResults extends ActionBarActivity {
                         intent.putExtra("position", position);
                         intent.putExtra("id", id);
 
+                        intent.putExtra("itemName", itemName);
+//                        intent.putExtra("store")
+
                         startActivity(intent);
                     }
                 });
@@ -80,32 +93,51 @@ public class SearchResults extends ActionBarActivity {
         };
 
         // Start the query
-        SearchTask task = new SearchTask(handler, itemName, null, null);
+        SearchTask task = new SearchTask(handler, itemName, coordinate, radius);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private Map<ParseStore, Map<ParseItem, ParseObject>> groupResults(List<ParseObject> parseObjects) {
-        Map<ParseStore, Map<ParseItem, ParseObject>> storeMap = new HashMap<>();
+    private List<ParseStore> groupResults(List<ParseObject> parseObjects, ParseGeoPoint origin) {
+        List<ParseStore> results = new ArrayList<>();
+        Map<ParseStore, Set<ParseItem>> storeMap = new HashMap<>();
 
-        for (ParseObject price : parseObjects) {
-            ParseStore store = new ParseStore(price.getParseObject("store"));
-            ParseItem item = new ParseItem(price.getParseObject("item"));
+        try {
+            for (ParseObject price : parseObjects) {
+                ParseObject storeObject = price.getParseObject("store");
+                storeObject.fetchIfNeeded();
 
-            if (storeMap.containsKey(store)) {
-                Map<ParseItem, ParseObject> itemMap = storeMap.get(store);
-                if (!itemMap.containsKey(item)) {
-                    itemMap.put(item, price); // Only put the most recent price for an item
+                ParseObject itemObject = price.getParseObject("item");
+                itemObject.fetchIfNeeded();
+
+                ParseStore store = new ParseStore(storeObject, origin);
+                ParseItem item = new ParseItem(itemObject);
+
+                if (storeMap.containsKey(store)) {
+                    Set<ParseItem> itemSet = storeMap.get(store);
+                    if (!itemSet.contains(item)) {
+                        itemSet.add(item); // We only care about the most recent price for an item
+
+                        results.get(results.indexOf(store)).setMinPrice(
+                                new BigDecimal(price.getString("amount")));
+                    }
+                }
+                else {
+                    Set<ParseItem> itemMap = new HashSet<>();
+                    itemMap.add(item);
+                    storeMap.put(store, itemMap);
+
+                    store.setMinPrice(new BigDecimal(price.getString("amount")));
+                    results.add(store);
                 }
             }
-            else {
-                Map<ParseItem, ParseObject> itemMap = new HashMap<>();
-                itemMap.put(item, price);
-
-                storeMap.put(store, itemMap);
-            }
+        }
+        catch (com.parse.ParseException e) {
+            e.printStackTrace();
         }
 
-        return storeMap;
+        Collections.sort(results, new ParseStoreComparator());
+
+        return results;
     };
 
     @Override

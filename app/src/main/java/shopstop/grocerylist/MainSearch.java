@@ -69,7 +69,14 @@ public class MainSearch extends Activity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), SearchResults.class);
-                intent.putExtra("itemName", "Juice"); // Set the item to search for
+
+                // Set the name of the item
+                intent.putExtra("itemName", "Juice");
+                // Set the location & radius
+                intent.putExtra("latitude", 35.28304);
+                intent.putExtra("longitude", -120.65925);
+                intent.putExtra("radius", 10.0);
+
                 startActivity(intent);
             }
         });

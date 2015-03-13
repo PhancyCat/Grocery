@@ -21,10 +21,10 @@ public class SearchTask extends AsyncTask<String, String, String> {
     private ParseQueryHandler handler;
     private String itemName;
     private ParseGeoPoint coordinate;
-    private Double radius;
+    private double radius;
 
     public SearchTask(ParseQueryHandler handler, String itemName, ParseGeoPoint coordinate,
-                      Double radius) {
+                      double radius) {
         this.handler = handler;
         this.itemName = itemName;
         this.coordinate = coordinate;
@@ -34,19 +34,17 @@ public class SearchTask extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... params) {
         ParseQuery<ParseObject> itemQuery = ParseQuery.getQuery("Item");
-
         itemQuery.whereContainsAll("tags", ParseItem.getTags(itemName));
 
         ParseQuery<ParseObject> priceQuery = ParseQuery.getQuery("Price");
         priceQuery.whereMatchesQuery("item", itemQuery);
+        priceQuery.orderByDescending("createdAt");
 
         if (coordinate != null) {
             ParseQuery<ParseObject> storeQuery = ParseQuery.getQuery("Store");
             storeQuery.whereWithinMiles("coordinate", coordinate, radius);
             priceQuery.whereMatchesQuery("store", storeQuery);
         }
-
-        priceQuery.orderByDescending("createdAt");
 
         priceQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override

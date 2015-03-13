@@ -45,7 +45,7 @@ public class StoreView extends RelativeLayout {
     public void setItem(Store item) {
         mNameView.setText(item.getName());
         mAddressView.setText(item.getAddress());
-        mDistanceView.setText(item.getDistance().toString());
+        mDistanceView.setText(String.format("%.3f mi", item.getDistance()));
     }
 
     public TextView getNameView() {
