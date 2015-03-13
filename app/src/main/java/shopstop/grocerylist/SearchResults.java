@@ -20,7 +20,6 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.*;
 
 import shopstop.grocerylist.parse.*;
@@ -62,6 +61,8 @@ public class SearchResults extends ActionBarActivity {
                 System.err.println("----- call complete -----");
 
                 final List<ParseStore> results = groupResults(parseObjects, coordinate);
+
+                Collections.sort(results, new ParseStoreMinPriceComparator());
 
                 // Add stores to list
                 for (ParseStore store : results) {
@@ -105,7 +106,6 @@ public class SearchResults extends ActionBarActivity {
             for (ParseObject price : parseObjects) {
                 ParseObject storeObject = price.getParseObject("store");
                 storeObject.fetchIfNeeded();
-
                 ParseObject itemObject = price.getParseObject("item");
                 itemObject.fetchIfNeeded();
 
@@ -114,8 +114,10 @@ public class SearchResults extends ActionBarActivity {
 
                 if (storeMap.containsKey(store)) {
                     Set<ParseItem> itemSet = storeMap.get(store);
+                    // We only care about the most recent price for an item
+                    // If item is already in history, we already have the most recent price
                     if (!itemSet.contains(item)) {
-                        itemSet.add(item); // We only care about the most recent price for an item
+                        itemSet.add(item); // Add item to history
 
                         results.get(results.indexOf(store)).setMinPrice(
                                 new BigDecimal(price.getString("amount")));
@@ -123,7 +125,7 @@ public class SearchResults extends ActionBarActivity {
                 }
                 else {
                     Set<ParseItem> itemMap = new HashSet<>();
-                    itemMap.add(item);
+                    itemMap.add(item); // Add item to history
                     storeMap.put(store, itemMap);
 
                     store.setMinPrice(new BigDecimal(price.getString("amount")));
@@ -134,8 +136,6 @@ public class SearchResults extends ActionBarActivity {
         catch (com.parse.ParseException e) {
             e.printStackTrace();
         }
-
-        Collections.sort(results, new ParseStoreComparator());
 
         return results;
     };
