@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,12 +21,16 @@ import com.parse.Parse;
 
 
 
-public class MainSearch extends Activity {
+public class MainSearch extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_search);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.show();
+
         setTitle("Search");
 
         Bundle bundle = getIntent().getExtras();
