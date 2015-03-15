@@ -175,8 +175,8 @@ public class MainSearch extends ActionBarActivity {
                 if(mFindItem.getText().toString().equals("")) {
                     mFindItem.setError(mFindItem.getHint() + " is required!");
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 ]++")) {
-                    mFindItem.setError("Only Alphanumeric caracters are allowed!");
+                } else if (!str.matches("^[a-zA-Z0-9][a-zA-Z0-9 .,\\-\\/\\(\\)]++")) {
+                    mFindItem.setError("Only Alphanumeric and special characters (,),., and - are allowed!");
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transgreen));
