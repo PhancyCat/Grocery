@@ -18,8 +18,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.zxing.integration.android.*;
 import com.parse.Parse;
+
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainSearch extends ActionBarActivity {
 
@@ -27,6 +42,7 @@ public class MainSearch extends ActionBarActivity {
     private EditText mLocation;
     private EditText mDistance;
     private Button  mSearchButton;
+    private String api_key = "b000281a6ef7ab7de23ce178afd6faf3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +105,19 @@ public class MainSearch extends ActionBarActivity {
             }
         });
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            HttpClient client = new DefaultHttpClient();
+            String url = "http://api.upcdatabase.org/json/" + api_key + "/0" + scanResult.getContents();
+            Log.d("Trying to get this", url);
+            new GetHTTPBarcode().execute(url);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -241,5 +270,54 @@ public class MainSearch extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    private class GetHTTPBarcode extends AsyncTask<String, String, JSONObject> {
+
+        protected JSONObject doInBackground(String ... uri) {
+            StringBuilder builder = new StringBuilder();
+            JSONObject jsonObject = new JSONObject();
+            HttpClient client = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(uri[0]);
+            try{
+                HttpResponse response = client.execute(httpGet);
+                StatusLine statusLine = response.getStatusLine();
+                int statusCode = statusLine.getStatusCode();
+                if(statusCode == 200){
+                    HttpEntity entity = response.getEntity();
+                    InputStream content = entity.getContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                    String line;
+                    while((line = reader.readLine()) != null){
+                        builder.append(line);
+                    }
+                    jsonObject = new JSONObject(builder.toString());
+                }
+                else {
+                    Log.d("Bad error code", "" + statusCode);
+                }
+            }catch(ClientProtocolException e){
+                e.printStackTrace();
+            } catch (IOException e){
+                e.printStackTrace();
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonObject;
+        }
+
+        protected void onProgressUpdate() {
+            Log.d("Response", "updating");
+        }
+
+        protected void onPostExecute(JSONObject result) {
+            try {
+                String name = result.get("itemname").toString();
+                mFindItem.setText(name);
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+                mFindItem.setText("");
+            }
+        }
     }
 }
