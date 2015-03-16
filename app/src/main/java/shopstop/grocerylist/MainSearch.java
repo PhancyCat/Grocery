@@ -278,16 +278,16 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     lat = address.getLatitude();
                     lon = address.getLongitude();
 
-
                     Intent intent = new Intent(getApplication(), SearchResults.class);
 
                     // Set the name of the item
-                    intent.putExtra("itemName", "Juice");
+                    intent.putExtra("itemName", mFindItem.getText().toString());
                     intent.putExtra("barcode", barcode);
                     // Set the location & radius
-                    intent.putExtra("latitude", 35.28304);
-                    intent.putExtra("longitude", -120.65925);
-                    intent.putExtra("radius", 10.0);
+                    intent.putExtra("latitude", lat);
+                    intent.putExtra("longitude", lon);
+                    intent.putExtra("radius", Double.parseDouble(mDistance.getText().toString()));
+
                     startActivity(intent);
                 }
             }

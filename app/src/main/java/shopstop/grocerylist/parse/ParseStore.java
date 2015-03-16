@@ -11,12 +11,14 @@ import java.math.BigDecimal;
 public class ParseStore {
     private String name;
     private String address;
+    private ParseGeoPoint coordinate;
     private double distance;
     private BigDecimal minPrice;
 
-    public ParseStore(String name, String address) {
+    public ParseStore(String name, String address, ParseGeoPoint coordinate) {
         this.name = name;
         this.address = address;
+        this.coordinate = coordinate;
     }
 
     public ParseStore(ParseObject parseObject, ParseGeoPoint origin) {
@@ -31,6 +33,10 @@ public class ParseStore {
 
     public String getAddress() {
         return address;
+    }
+
+    public ParseGeoPoint getCoordinate() {
+        return coordinate;
     }
 
     public double getDistance() {
@@ -51,11 +57,11 @@ public class ParseStore {
     public boolean equals(Object o) {
         ParseStore other = (ParseStore) o;
         return name.equals(other.name) &&
-                address.equals(other.address);
+                coordinate.toString().equals(other.coordinate.toString());
     }
 
     @Override
     public int hashCode() {
-        return (name + address).hashCode();
+        return (name + coordinate.toString()).hashCode();
     }
 }

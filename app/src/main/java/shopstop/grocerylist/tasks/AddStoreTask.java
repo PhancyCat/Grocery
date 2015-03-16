@@ -29,7 +29,7 @@ public class AddStoreTask extends AsyncTask<String, String, String> {
         ParseQuery<ParseObject> storeQuery = ParseQuery.getQuery("Store");
 
         storeQuery.whereEqualTo("name", store.getName());
-        storeQuery.whereEqualTo("address", store.getAddress());
+        storeQuery.whereEqualTo("coordinate", store.getCoordinate());
 
         storeQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -45,8 +45,7 @@ public class AddStoreTask extends AsyncTask<String, String, String> {
 
                         storeObject.put("name", store.getName());
                         storeObject.put("address", store.getAddress());
-                        // TODO: Geocoding
-                        // storeObject.put("coordinate", ...);
+                        storeObject.put("coordinate", store.getCoordinate());
 
                         storeObject.saveInBackground(new SaveCallback() {
                             @Override

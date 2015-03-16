@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 import org.apache.http.client.HttpClient;
@@ -281,7 +282,6 @@ public class AddItem extends Activity implements HTTPResponse {
                     ;
                     Log.d("add", "adding resource?");
                 } else {
-
                     // Finds address when user clicks search
                     Geocoding gc = new Geocoding(AddItem.this);
                     List<Address> addresses = gc.getCoord(mAddress.getText().toString(), AddItem.this);
@@ -299,9 +299,10 @@ public class AddItem extends Activity implements HTTPResponse {
                     lat = address.getLatitude();
                     lon = address.getLongitude();
 
-                    ParseStore store = new ParseStore("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
-                    ParseItem item = new ParseItem("Juice", "oz", "12.0");
-                    ParsePrice price = new ParsePrice("3.99", false, item, store);
+                    ParseStore store = new ParseStore(mStore.getText().toString(), mAddress.getText().toString(),
+                            new ParseGeoPoint(lat, lon));
+                    ParseItem item = new ParseItem(mItem.getText().toString(), "Label", mQuant.getText().toString());
+                    ParsePrice price = new ParsePrice(mPrice.getText().toString(), false, item, store);
 
                     Log.d("add", "adding dummy data");
 
