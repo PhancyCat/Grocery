@@ -2,6 +2,7 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,17 +15,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.parse.ParseObject;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import shopstop.grocerylist.parse.ParseItem;
 import shopstop.grocerylist.parse.ParseObjectHandler;
 import shopstop.grocerylist.parse.ParsePrice;
 import shopstop.grocerylist.parse.ParseStore;
 import shopstop.grocerylist.tasks.AddPriceTask;
+import shopstop.grocerylist.tasks.GetBarcode;
+import shopstop.grocerylist.tasks.HTTPResponse;
 
 
-public class AddItem extends Activity {
+public class AddItem extends Activity implements HTTPResponse {
 
     private EditText mItem;
     private EditText mPrice;
@@ -32,6 +43,9 @@ public class AddItem extends Activity {
     private EditText mStore;
     private EditText mAddress;
     private Button mAddButton;
+    private Button mBarcode;
+    private String barcode;
+    private String api_key = "b000281a6ef7ab7de23ce178afd6faf3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +59,9 @@ public class AddItem extends Activity {
         mStore = (EditText)findViewById(R.id.storeEdit);
         mAddress = (EditText)findViewById(R.id.addressEdit);
         mAddButton = (Button) findViewById(R.id.addButton);
+        mBarcode = (Button) findViewById(R.id.addBarcode);
 
+        barcode = null;
         setListeners();
 
     }
@@ -90,6 +106,9 @@ public class AddItem extends Activity {
     }
 
     private void setListeners() {
+
+
+
         mItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -103,7 +122,7 @@ public class AddItem extends Activity {
                 if(mItem.getText().toString().equals("")) {
                     mItem.setError("Input is required!");
                     mItem.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 ]++")) {
+                } else if (!str.matches("^[a-zA-Z0-9][a-zA-Z0-9 .,\\-\\/\\(\\)]++")) {
                     mItem.setError("Only alphanumeric characters are allowed!");
                     mItem.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
@@ -230,6 +249,18 @@ public class AddItem extends Activity {
             }
         });
 
+        mBarcode.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(AddItem.this);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+                integrator.setPrompt("Scan a barcode");
+                integrator.setResultDisplayDuration(0);
+                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+                integrator.setCameraId(0);  // Use a specific camera of the device
+                integrator.initiateScan();
+            }
+        });
+
         final ParseObjectHandler handler = new ParseObjectHandler() {
             @Override
             public void onCallComplete(ParseObject parseObject) {
@@ -244,10 +275,13 @@ public class AddItem extends Activity {
                         mStore.getText().toString().equals("") || mStore.getError() != null ||
                         mAddress.getText().toString().equals("") || mAddress.getError() != null) {
                     ;
+                    Log.d("add", "adding resource?");
                 } else {
                     ParseStore store = new ParseStore("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
                     ParseItem item = new ParseItem("Juice", "oz", "12.0");
                     ParsePrice price = new ParsePrice("3.99", false, item, store);
+
+                    Log.d("add", "adding dummy data");
 
                     // Add the price
                     AddPriceTask task = new AddPriceTask(handler, price);
@@ -255,5 +289,39 @@ public class AddItem extends Activity {
                 }
             }
         });
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            HttpClient client = new DefaultHttpClient();
+            String url = "http://api.upcdatabase.org/json/" + api_key + "/0" + scanResult.getContents();
+            barcode = scanResult.getContents();
+            Log.d("Trying to get this", url);
+//            new GetHTTPBarcode().execute(url);
+            GetBarcode task = new GetBarcode(this);
+            task.execute(url);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void postResult(JSONObject result) {
+        try {
+            String name = result.get("itemname").toString();
+            Log.d("result", name);
+            if (!name.isEmpty()) {
+                mItem.setText(name);
+                mItem.setEnabled(false);
+                barcode = result.get("number").toString();
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+            mItem.getText().clear();
+            barcode = null;
+        }
     }
 }

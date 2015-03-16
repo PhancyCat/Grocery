@@ -55,7 +55,8 @@
         android:width="250dp"
         android:layout_alignTop="@+id/itemTag"
         android:layout_toRightOf="@+id/itemTag"
-        android:layout_toEndOf="@+id/itemTag" />
+        android:layout_alignRight="@+id/addButton"
+        android:layout_alignEnd="@+id/addButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -150,8 +151,18 @@
         android:text="Add"
         android:id="@+id/addButton"
         android:width="200dp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/addressEdit"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="|||"
+        android:id="@+id/addBarcode"
+        android:textColor="@color/main_green"
+        android:layout_above="@+id/priceTag"
+        android:layout_alignRight="@+id/priceEdit"
+        android:layout_alignEnd="@+id/priceEdit" />
 
 </RelativeLayout>
