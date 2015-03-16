@@ -62,7 +62,8 @@
         android:hint="Item Name"
         android:layout_alignTop="@+id/findLabel"
         android:layout_toRightOf="@+id/nearLabel"
-        android:layout_toEndOf="@+id/nearLabel" />
+        android:layout_toEndOf="@+id/nearLabel"
+        android:singleLine="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,7 +84,8 @@
         android:hint="Location"
         android:layout_alignTop="@+id/nearLabel"
         android:layout_alignLeft="@+id/findItemName"
-        android:layout_alignStart="@+id/findItemName" />
+        android:layout_alignStart="@+id/findItemName"
+        android:singleLine="true" />
 
 
     <TextView
@@ -107,7 +109,8 @@
         android:layout_alignTop="@+id/distLabel"
         android:layout_alignLeft="@+id/distLabel"
         android:layout_alignStart="@+id/distLabel"
-        android:layout_marginTop="33dp" />
+        android:layout_marginTop="33dp"
+        android:inputType="numberDecimal" />
 
     <Button
         android:layout_width="wrap_content"

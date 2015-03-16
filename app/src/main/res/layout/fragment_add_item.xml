@@ -56,7 +56,8 @@
         android:layout_alignTop="@+id/itemTag"
         android:layout_toRightOf="@+id/itemTag"
         android:layout_alignRight="@+id/addButton"
-        android:layout_alignEnd="@+id/addButton" />
+        android:layout_alignEnd="@+id/addButton"
+        android:singleLine="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -93,7 +94,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/quantEdit"
         android:width="250dp"
@@ -121,7 +122,8 @@
         android:layout_alignBottom="@+id/storeTag"
         android:layout_toRightOf="@+id/storeTag"
         android:layout_toEndOf="@+id/storeTag"
-        android:width="250dp" />
+        android:width="250dp"
+        android:singleLine="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -143,7 +145,8 @@
         android:layout_alignTop="@+id/addressTag"
         android:layout_toRightOf="@+id/addressTag"
         android:layout_toEndOf="@+id/addressTag"
-        android:width="250dp" />
+        android:width="250dp"
+        android:singleLine="true" />
 
     <Button
         android:layout_width="wrap_content"
