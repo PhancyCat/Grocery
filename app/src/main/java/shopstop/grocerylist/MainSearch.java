@@ -2,13 +2,8 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Criteria;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -32,11 +27,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
+import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 
@@ -267,7 +260,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     ;
                 } else {
                     // Finds address when user clicks search
-                    List<Address> addresses = getCoord(mLocation.getText().toString(), MainSearch.this);
+                    Geocoding gc = new Geocoding(MainSearch.this);
+                    List<Address> addresses = gc.getCoord(mLocation.getText().toString(), MainSearch.this);
                     Address address;
                     double lat, lon;
                     if (addresses.isEmpty()) {
@@ -318,53 +312,5 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         }
     }
 
-    public List<Address> getCoord(String address, Context context){
-        Geocoder gc = new Geocoder(context);
-        List<Address> addresses = new ArrayList<Address>();
 
-        try {
-            Log.d("looking up", address);
-            double[] boundingBox = getBB();
-            addresses = gc.getFromLocationName(address, 1, boundingBox[0], boundingBox[3], boundingBox[2], boundingBox[1]);
-            for (Address a : addresses) {
-                Log.d("address", a.toString());
-            }
-            Log.d("Addresses", addresses.toString());
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return addresses;
-    }
-
-    public double[] getBB() {
-        double[] boundingBox = new double[4];
-
-        double[] myLoc = getGPS();
-        boundingBox[0] = myLoc[0] - (5.0/69);
-        boundingBox[2] = myLoc[0] + (5.0/69);
-        boundingBox[1] = myLoc[1] - (5.0 / (3960 * 2 * Math.PI /360 * Math.cos(boundingBox[0])));
-        boundingBox[3] = myLoc[1] + (5.0 / (3960 * 2 * Math.PI /360 * Math.cos(boundingBox[0])));
-        return boundingBox;
-    }
-
-    private double[] getGPS() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        List<String> providers = lm.getProviders(true);
-
-        /* Loop over the array backwards, and if you get an accurate location, then break out the loop*/
-        Location l = null;
-
-        for (int i=providers.size()-1; i>=0; i--) {
-            l = lm.getLastKnownLocation(providers.get(i));
-            if (l != null) break;
-        }
-
-        double[] gps = new double[2];
-        if (l != null) {
-            gps[0] = l.getLatitude();
-            gps[1] = l.getLongitude();
-        }
-        return gps;
-    }
 }

@@ -3,6 +3,7 @@ package shopstop.grocerylist;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,11 +27,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import shopstop.grocerylist.parse.ParseItem;
 import shopstop.grocerylist.parse.ParseObjectHandler;
 import shopstop.grocerylist.parse.ParsePrice;
 import shopstop.grocerylist.parse.ParseStore;
 import shopstop.grocerylist.tasks.AddPriceTask;
+import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 
@@ -277,6 +281,24 @@ public class AddItem extends Activity implements HTTPResponse {
                     ;
                     Log.d("add", "adding resource?");
                 } else {
+
+                    // Finds address when user clicks search
+                    Geocoding gc = new Geocoding(AddItem.this);
+                    List<Address> addresses = gc.getCoord(mAddress.getText().toString(), AddItem.this);
+                    Address address;
+                    double lat, lon;
+                    if (addresses.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    address = addresses.get(0);
+                    if (!address.hasLatitude() || !address.hasLongitude()) {
+                        Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    lat = address.getLatitude();
+                    lon = address.getLongitude();
+
                     ParseStore store = new ParseStore("Trader Joe's", "3977 S Higuera St, San Luis Obispo, CA 93401");
                     ParseItem item = new ParseItem("Juice", "oz", "12.0");
                     ParsePrice price = new ParsePrice("3.99", false, item, store);
