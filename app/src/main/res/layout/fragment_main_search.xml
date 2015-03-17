@@ -9,128 +9,127 @@
     tools:context=".MainSearch$PlaceholderFragment"
     android:id="@+id/groceryMainLayout">
 
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:gravity="right"
-        android:background="@drawable/background_box"
-        android:id="@+id/topMenu">
+        android:layout_centerVertical="true">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Find: "
+                android:id="@+id/findLabel"
+                android:textColor="@color/main_green"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/findItemName"
+                android:width="200dp"
+                android:hint="Item Name"
+                android:layout_alignTop="@+id/findLabel"
+                android:layout_toRightOf="@+id/nearLabel"
+                android:layout_toEndOf="@+id/nearLabel"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Near: "
+                android:id="@+id/nearLabel"
+                android:layout_below="@+id/findLabel"
+                android:textColor="@color/main_green"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/location"
+                android:width="200dp"
+                android:hint="Location"
+                android:layout_alignTop="@+id/nearLabel"
+                android:layout_alignLeft="@+id/findItemName"
+                android:layout_alignStart="@+id/findItemName"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
-            android:id="@+id/addPrice"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/barcode"
-            android:layout_toStartOf="@+id/barcode"
-            android:textColor="@color/main_green" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Distance:"
+            android:id="@+id/distLabel"
+            android:textColor="@color/main_green"
+            android:layout_below="@+id/location"
+            android:layout_alignLeft="@+id/nearLabel"
+            android:layout_alignStart="@+id/nearLabel"
+            android:layout_gravity="left"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1">
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/disance"
+                android:width="200dp"
+                android:hint="Maximum Distance"
+                android:layout_alignTop="@+id/distLabel"
+                android:layout_alignLeft="@+id/distLabel"
+                android:layout_alignStart="@+id/distLabel"
+                android:inputType="numberDecimal"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="miles"
+                android:id="@+id/milesTag"
+                android:layout_alignBottom="@+id/disance"
+                android:layout_toRightOf="@+id/searchButton"
+                android:layout_toEndOf="@+id/searchButton"
+                android:layout_gravity="center"
+                android:gravity="end" />
+        </LinearLayout>
 
         <Button
-            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="|||"
-            android:id="@+id/barcode"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/main_green" />
+            android:text="Search"
+            android:id="@+id/searchButton"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:width="150dp"
+            android:textColor="@color/main_green"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="24dp" />
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Find: "
-        android:id="@+id/findLabel"
-        android:layout_below="@+id/topMenu"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="64dp"
-        android:textColor="@color/main_green" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/findItemName"
-        android:width="200dp"
-        android:hint="Item Name"
-        android:layout_alignTop="@+id/findLabel"
-        android:layout_toRightOf="@+id/nearLabel"
-        android:layout_toEndOf="@+id/nearLabel"
-        android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Near: "
-        android:id="@+id/nearLabel"
-        android:layout_below="@+id/findLabel"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="32dp"
-        android:textColor="@color/main_green" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/location"
-        android:width="200dp"
-        android:hint="Location"
-        android:layout_alignTop="@+id/nearLabel"
-        android:layout_alignLeft="@+id/findItemName"
-        android:layout_alignStart="@+id/findItemName"
-        android:singleLine="true" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Distance: "
-        android:id="@+id/distLabel"
-        android:textColor="@color/main_green"
-        android:layout_below="@+id/location"
-        android:layout_alignLeft="@+id/nearLabel"
-        android:layout_alignStart="@+id/nearLabel"
-        android:layout_marginTop="54dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/disance"
-        android:width="200dp"
-        android:hint="Maximum Distance"
-        android:layout_alignTop="@+id/distLabel"
-        android:layout_alignLeft="@+id/distLabel"
-        android:layout_alignStart="@+id/distLabel"
-        android:layout_marginTop="33dp"
-        android:inputType="numberDecimal" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:id="@+id/searchButton"
-        android:layout_marginBottom="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:width="150dp"
-        android:textColor="@color/main_green" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Miles"
-        android:id="@+id/milesTag"
-        android:layout_alignBottom="@+id/disance"
-        android:layout_toRightOf="@+id/searchButton"
-        android:layout_toEndOf="@+id/searchButton" />
 
 </RelativeLayout>

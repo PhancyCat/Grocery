@@ -10,162 +10,215 @@
     android:id="@+id/addItemLayout">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@drawable/background_box"
-        android:id="@+id/topTitle">
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Item Information"
+            android:id="@+id/itemHeading"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="right">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="4dp">
 
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="96dp"
                 android:layout_height="wrap_content"
-                android:text="$"
-                android:background="#ffeaeaea"
-                android:id="@+id/toggle" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Name: "
+                android:id="@+id/itemTag"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/itemEdit"
+                android:width="250dp"
+                android:layout_alignTop="@+id/itemTag"
+                android:layout_toRightOf="@+id/itemTag"
+                android:layout_alignRight="@+id/addButton"
+                android:layout_alignEnd="@+id/addButton"
+                android:singleLine="true"
+                android:layout_weight="1" />
+
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Price: "
+                android:id="@+id/priceTag"
+                android:layout_below="@+id/itemEdit"
+                android:layout_alignRight="@+id/itemTag"
+                android:layout_alignEnd="@+id/itemTag"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="$"
+                android:id="@+id/priceDollarSign"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/priceEdit"
+                android:layout_alignTop="@+id/priceTag"
+                android:layout_toRightOf="@+id/priceTag"
+                android:layout_toEndOf="@+id/priceTag"
+                android:width="250dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Quantity: "
+                android:id="@+id/quantTag"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/quantEdit"
+                android:layout_toStartOf="@+id/quantEdit"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:id="@+id/quantEdit"
+                android:width="250dp"
+                android:layout_alignBottom="@+id/quantTag"
+                android:layout_alignLeft="@+id/priceEdit"
+                android:layout_alignStart="@+id/priceEdit" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Store Information"
+            android:id="@+id/storeHeading"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Name: "
+                android:id="@+id/storeTag"
+                android:layout_below="@+id/quantTag"
+                android:layout_alignRight="@+id/quantTag"
+                android:layout_alignEnd="@+id/quantTag"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:ems="10"
+                android:id="@+id/storeEdit"
+                android:layout_alignBottom="@+id/storeTag"
+                android:layout_toRightOf="@+id/storeTag"
+                android:layout_toEndOf="@+id/storeTag"
+                android:width="250dp"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Address: "
+                android:id="@+id/addressTag"
+                android:layout_below="@+id/storeTag"
+                android:layout_alignRight="@+id/storeTag"
+                android:layout_alignEnd="@+id/storeTag"
+                android:layout_gravity="center" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
+                android:ems="10"
+                android:id="@+id/addressEdit"
+                android:layout_alignTop="@+id/addressTag"
+                android:layout_toRightOf="@+id/addressTag"
+                android:layout_toEndOf="@+id/addressTag"
+                android:width="250dp"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:id="@+id/addButton"
+            android:width="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="24dp"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Item: "
-        android:id="@+id/itemTag"
-        android:layout_marginTop="46dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginStart="36dp"
-        android:layout_below="@+id/topTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/itemEdit"
-        android:width="250dp"
-        android:layout_alignTop="@+id/itemTag"
-        android:layout_toRightOf="@+id/itemTag"
-        android:layout_alignRight="@+id/addButton"
-        android:layout_alignEnd="@+id/addButton"
-        android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Price: $"
-        android:id="@+id/priceTag"
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/itemEdit"
-        android:layout_alignRight="@+id/itemTag"
-        android:layout_alignEnd="@+id/itemTag" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/priceEdit"
-        android:layout_alignTop="@+id/priceTag"
-        android:layout_toRightOf="@+id/priceTag"
-        android:layout_toEndOf="@+id/priceTag"
-        android:width="250dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Quantity: "
-        android:id="@+id/quantTag"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/quantEdit"
-        android:layout_toStartOf="@+id/quantEdit" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:ems="10"
-        android:id="@+id/quantEdit"
-        android:width="250dp"
-        android:layout_alignBottom="@+id/quantTag"
-        android:layout_alignLeft="@+id/priceEdit"
-        android:layout_alignStart="@+id/priceEdit" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Store: "
-        android:id="@+id/storeTag"
-        android:layout_below="@+id/quantTag"
-        android:layout_alignRight="@+id/quantTag"
-        android:layout_alignEnd="@+id/quantTag"
-        android:layout_marginTop="38dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:id="@+id/storeEdit"
-        android:layout_alignBottom="@+id/storeTag"
-        android:layout_toRightOf="@+id/storeTag"
-        android:layout_toEndOf="@+id/storeTag"
-        android:width="250dp"
-        android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Address: "
-        android:id="@+id/addressTag"
-        android:layout_marginTop="38dp"
-        android:layout_below="@+id/storeTag"
-        android:layout_alignRight="@+id/storeTag"
-        android:layout_alignEnd="@+id/storeTag" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"
-        android:ems="10"
-        android:id="@+id/addressEdit"
-        android:layout_alignTop="@+id/addressTag"
-        android:layout_toRightOf="@+id/addressTag"
-        android:layout_toEndOf="@+id/addressTag"
-        android:width="250dp"
-        android:singleLine="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add"
-        android:id="@+id/addButton"
-        android:width="200dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="|||"
-        android:id="@+id/addBarcode"
-        android:textColor="@color/main_green"
-        android:layout_above="@+id/priceTag"
-        android:layout_alignRight="@+id/priceEdit"
-        android:layout_alignEnd="@+id/priceEdit" />
 
 </RelativeLayout>
