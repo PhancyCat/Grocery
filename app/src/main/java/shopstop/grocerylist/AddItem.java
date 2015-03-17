@@ -1,11 +1,15 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,7 +44,7 @@ import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 
 
-public class AddItem extends Activity implements HTTPResponse {
+public class AddItem extends ActionBarActivity implements HTTPResponse {
 
     private EditText mItem;
     private EditText mPrice;
@@ -56,7 +60,10 @@ public class AddItem extends Activity implements HTTPResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        setTitle("Add Price");
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.show();
+        actionBar.setTitle("Add Price");
 
         mItem = (EditText)findViewById(R.id.itemEdit);
         mPrice = (EditText)findViewById(R.id.priceEdit);
@@ -64,7 +71,7 @@ public class AddItem extends Activity implements HTTPResponse {
         mStore = (EditText)findViewById(R.id.storeEdit);
         mAddress = (EditText)findViewById(R.id.addressEdit);
         mAddButton = (Button) findViewById(R.id.addButton);
-        mBarcode = (Button) findViewById(R.id.addBarcode);
+//        mBarcode = (Button) findViewById(R.id.addBarcode);
 
         barcode = null;
         setListeners();
@@ -87,8 +94,14 @@ public class AddItem extends Activity implements HTTPResponse {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_scan) {
+            IntentIntegrator integrator = new IntentIntegrator(AddItem.this);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+            integrator.setPrompt("Scan a barcode");
+            integrator.setResultDisplayDuration(0);
+            integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+            integrator.setCameraId(0);  // Use a specific camera of the device
+            integrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -112,7 +125,7 @@ public class AddItem extends Activity implements HTTPResponse {
 
     private void setListeners() {
 
-
+        final Activity act = this;
 
         mItem.addTextChangedListener(new TextWatcher() {
             @Override
@@ -183,8 +196,8 @@ public class AddItem extends Activity implements HTTPResponse {
                 if(mQuant.getText().toString().equals("")) {
                     mQuant.setError("Input is required!");
                     mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("\\d+")) {
-                    mQuant.setError("Only whole numbers are allowed!");
+                } else if (!str.matches("\\d+[.]?\\d*")) {
+                    mQuant.setError("Only numbers are allowed!");
                     mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
                     mQuant.setBackgroundColor(getResources().getColor(R.color.transgreen));
@@ -254,17 +267,17 @@ public class AddItem extends Activity implements HTTPResponse {
             }
         });
 
-        mBarcode.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(AddItem.this);
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-                integrator.setPrompt("Scan a barcode");
-                integrator.setResultDisplayDuration(0);
-                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
-                integrator.setCameraId(0);  // Use a specific camera of the device
-                integrator.initiateScan();
-            }
-        });
+//        mBarcode.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                IntentIntegrator integrator = new IntentIntegrator(AddItem.this);
+//                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+//                integrator.setPrompt("Scan a barcode");
+//                integrator.setResultDisplayDuration(0);
+//                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+//                integrator.setCameraId(0);  // Use a specific camera of the device
+//                integrator.initiateScan();
+//            }
+//        });
 
         final ParseObjectHandler handler = new ParseObjectHandler() {
             @Override
@@ -279,8 +292,16 @@ public class AddItem extends Activity implements HTTPResponse {
                         mQuant.getText().toString().equals("") || mQuant.getError() != null ||
                         mStore.getText().toString().equals("") || mStore.getError() != null ||
                         mAddress.getText().toString().equals("") || mAddress.getError() != null) {
-                    ;
-                    Log.d("add", "adding resource?");
+                    AlertDialog alertDialog = new AlertDialog.Builder(act).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("Please check that you filled in the fields correctly.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
                 } else {
                     // Finds address when user clicks search
                     Geocoding gc = new Geocoding(AddItem.this);

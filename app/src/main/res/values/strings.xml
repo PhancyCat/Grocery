@@ -11,5 +11,7 @@
     <string name="title_activity_store_results">StoreResults</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_splash">Splash</string>
+    <string name="action_add">Add Price</string>
+    <string name="action_scan">Scan Barcode</string>
 
 </resources>

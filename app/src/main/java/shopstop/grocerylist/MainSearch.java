@@ -1,7 +1,9 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
@@ -49,13 +51,13 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
+        actionBar.setTitle("ShopStop Search");
+        actionBar.setIcon(R.drawable.shopstopicon); // this doesn't work...
 
         mFindItem = (EditText)findViewById(R.id.findItemName);
         mLocation = (EditText)findViewById(R.id.location);
         mDistance = (EditText)findViewById(R.id.disance);
         mSearchButton = (Button) findViewById(R.id.searchButton);
-
-        setTitle("Search");
 
         Bundle bundle = getIntent().getExtras();
         String fillItem = null;
@@ -82,26 +84,26 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         Parse.enableLocalDatastore(this);
         Parse.initialize(this, "F9eyFqMsPkNv18Xo9w4h9K7wya49YIbiTFcV1fny", "ZV4SwkGbpNbT9EpIqgw7WfMQSb7w7ocIZicSSb4y");
 
-        final Button scanButton = (Button) findViewById(R.id.barcode);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(act);
-                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-                integrator.setPrompt("Scan a barcode");
-                integrator.setResultDisplayDuration(0);
-                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
-                integrator.setCameraId(0);  // Use a specific camera of the device
-                integrator.initiateScan();
-            }
-        });
-
-        Button addButton = (Button) findViewById(R.id.addPrice);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), AddItem.class);
-                startActivity(intent);
-            }
-        });
+//        final Button scanButton = (Button) findViewById(R.id.barcode);
+//        scanButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                IntentIntegrator integrator = new IntentIntegrator(act);
+//                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+//                integrator.setPrompt("Scan a barcode");
+//                integrator.setResultDisplayDuration(0);
+//                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+//                integrator.setCameraId(0);  // Use a specific camera of the device
+//                integrator.initiateScan();
+//            }
+//        });
+//
+//        Button addButton = (Button) findViewById(R.id.addPrice);
+//        addButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplication(), AddItem.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
 
@@ -138,8 +140,19 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_add) {
+            Intent intent = new Intent(getApplication(), AddItem.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.action_scan) {
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
+            integrator.setPrompt("Scan a barcode");
+            integrator.setResultDisplayDuration(0);
+            integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
+            integrator.setCameraId(0);  // Use a specific camera of the device
+            integrator.initiateScan();
         }
 
         return super.onOptionsItemSelected(item);
@@ -163,6 +176,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
 
     public void setListeners() {
 
+        final Activity act = this;
+
         //Item Validation
         mFindItem.addTextChangedListener(new TextWatcher() {
             @Override
@@ -178,7 +193,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     mFindItem.setError(mFindItem.getHint() + " is required!");
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else if (!str.matches("^[a-zA-Z0-9][a-zA-Z0-9 .,\\-\\/\\(\\)]++")) {
-                    mFindItem.setError("Only Alphanumeric and special characters (,),., and - are allowed!");
+                    mFindItem.setError("Only alphanumeric and special characters: .,()- are allowed!");
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
                     mFindItem.setBackgroundColor(getResources().getColor(R.color.transgreen));
@@ -204,7 +219,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                 String str = mDistance.getText().toString();
 
                 if(mDistance.getText().toString().equals("")) {
-                    mDistance.setError(mFindItem.getHint() + " is required!");
+                    mDistance.setError(mDistance.getHint() + " is required!");
                     mDistance.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else if (!str.matches("\\d+[.]?\\d*")) {
                     mDistance.setError("Only numbers are allowed!");
@@ -233,10 +248,10 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                 String str = mLocation.getText().toString();
 
                 if(mLocation.getText().toString().equals("")) {
-                    mLocation.setError(mFindItem.getHint() + " is required!");
+                    mLocation.setError(mLocation.getHint() + " is required!");
                     mLocation.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 ]++")) {
-                    mLocation.setError("Only alphanumeric characters are allowed!");
+                } else if (!str.matches("[a-zA-Z0-9., ]++")) {
+                    mLocation.setError("Only alphanumeric and special characters: ., are allowed!");
                     mLocation.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
                     mLocation.setBackgroundColor(getResources().getColor(R.color.transgreen));
@@ -255,9 +270,18 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
             @Override
             public void onClick(View view) {
                 if(mFindItem.getText().toString().equals("") || mFindItem.getError() != null ||
-                 mDistance.getText().toString().equals("")|| mDistance.getError() != null ||
-                 mLocation.getText().toString().equals("") || mLocation.getError() != null) {
-                    ;
+                    mDistance.getText().toString().equals("")|| mDistance.getError() != null ||
+                    mLocation.getText().toString().equals("") || mLocation.getError() != null) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(act).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("Please check that you filled in the fields correctly.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
                 } else {
                     // Finds address when user clicks search
                     Geocoding gc = new Geocoding(MainSearch.this);
