@@ -282,6 +282,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
 
                     // Set the name of the item
                     intent.putExtra("itemName", mFindItem.getText().toString());
+                    intent.putExtra("location", mLocation.getText().toString());
                     intent.putExtra("barcode", barcode);
                     // Set the location & radius
                     intent.putExtra("latitude", lat);

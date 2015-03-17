@@ -1,6 +1,7 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,9 +53,14 @@ public class StoreResults extends ActionBarActivity {
 
         final Activity act = this;
 
+        final ProgressDialog progress = new ProgressDialog(act);
+
         final String itemName = getIntent().getStringExtra("itemName");
         final String storeName = getIntent().getStringExtra("storeName");
         final String storeAddress = getIntent().getStringExtra("storeAddress");
+
+        getSupportActionBar().setTitle(storeName);
+        getSupportActionBar().setSubtitle(storeAddress);
 
         ParseQueryHandler handler = new ParseQueryHandler() {
             @Override
@@ -88,8 +94,13 @@ public class StoreResults extends ActionBarActivity {
                     }
                 });
                 */
+
+                progress.dismiss();
             }
         };
+
+        progress.setMessage("Loading items...");
+        progress.show();
 
         // Start the query
         SearchStoreTask task = new SearchStoreTask(handler, itemName, storeName, storeAddress);

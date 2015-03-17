@@ -1,6 +1,7 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,13 +46,19 @@ public class SearchResults extends ActionBarActivity {
 
         final Activity act = this;
 
+        final ProgressDialog progress = new ProgressDialog(act);
+
         // Get the item to search for
         final String itemName = getIntent().getStringExtra("itemName");
+        final String location = getIntent().getStringExtra("location");
         final double latitude = getIntent().getDoubleExtra("latitude", 0);
         final double longitude = getIntent().getDoubleExtra("longitude", 0);
         final double radius = getIntent().getDoubleExtra("radius", 10);
 
         final ParseGeoPoint coordinate = new ParseGeoPoint(latitude, longitude);
+
+        getSupportActionBar().setTitle(itemName);
+        getSupportActionBar().setSubtitle("near " + location);
 
         // Handle the query results
         ParseQueryHandler handler = new ParseQueryHandler() {
@@ -85,8 +92,13 @@ public class SearchResults extends ActionBarActivity {
                         startActivity(intent);
                     }
                 });
+
+                progress.dismiss();
             }
         };
+
+        progress.setMessage("Loading stores...");
+        progress.show();
 
         // Start the query
         SearchTask task = new SearchTask(handler, itemName, coordinate, radius);
