@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.parse.ParseException;
@@ -33,15 +35,26 @@ import shopstop.grocerylist.parse.ParseQueryHandler;
 import shopstop.grocerylist.tasks.SearchStoreTask;
 
 public class StoreResults extends ActionBarActivity {
+    double lat;
+    double lon;
+
+    private Button mMapStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_results);
+
+        mMapStore = (Button)findViewById(R.id.map_icon);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+
+
+        setListeners();
     }
 
     @Override
@@ -160,5 +173,18 @@ public class StoreResults extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_store_results, container, false);
             return rootView;
         }
+    }
+
+    public void setListeners() {
+        mMapStore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplication(), StoreMap.class);
+//                intent.putExtra("latitude", lat);
+//                intent.putExtra("longitude", lon);
+
+                startActivity(intent);
+            }
+        });
     }
 }

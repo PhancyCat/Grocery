@@ -1,5 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:support="http://schemas.android.com/apk/res-auto"
     tools:context="com.shopstop.grocerylist.StoreResults">
+
+    <item
+        android:id="@+id/map_icon"
+        android:title="@string/treasure_map"
+        android:icon="@drawable/treasure_map"
+        support:showAsAction="ifRoom"
+        />
 
 </menu>

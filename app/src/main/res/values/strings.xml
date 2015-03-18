@@ -13,5 +13,6 @@
     <string name="title_activity_splash">Splash</string>
     <string name="action_add">Add Price</string>
     <string name="action_scan">Scan Barcode</string>
+    <string name="treasure_map">Store Location</string>
 
 </resources>
