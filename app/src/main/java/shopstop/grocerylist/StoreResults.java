@@ -176,4 +176,12 @@ public class StoreResults extends ActionBarActivity {
             return rootView;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.animator.leftin, R.animator.leftout);
+
+        return;
+    }
 }

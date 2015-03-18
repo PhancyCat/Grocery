@@ -94,6 +94,8 @@ public class SearchResults extends ActionBarActivity {
                         intent.putExtra("lon", results.get(position).getCoordinate().getLongitude());
 
                         startActivity(intent);
+
+                        overridePendingTransition(R.animator.leftin, R.animator.leftout);
                     }
                 });
 
