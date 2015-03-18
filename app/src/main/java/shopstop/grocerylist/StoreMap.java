@@ -22,6 +22,7 @@ public class StoreMap extends ActionBarActivity {
 
         map.setMyLocationEnabled(true);
 
+
 //        map.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(xxxx, xxxx), 14.0f) );
 
 

@@ -51,7 +51,7 @@ public class Geocoding {
         return boundingBox;
     }
 
-    private double[] getGPS() {
+    public double[] getGPS() {
         LocationManager lm = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = lm.getProviders(true);
 
