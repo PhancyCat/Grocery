@@ -40,7 +40,8 @@
                 android:layout_alignTop="@+id/findLabel"
                 android:layout_toRightOf="@+id/nearLabel"
                 android:layout_toEndOf="@+id/nearLabel"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:inputType="text|textCapWords" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +69,8 @@
                 android:layout_alignTop="@+id/nearLabel"
                 android:layout_alignLeft="@+id/findItemName"
                 android:layout_alignStart="@+id/findItemName"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:inputType="text|textNoSuggestions|textCapWords" />
         </LinearLayout>
 
         <TextView

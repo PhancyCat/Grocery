@@ -49,6 +49,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
     private EditText mItem;
     private EditText mPrice;
     private EditText mQuant;
+    private EditText mUnit;
     private EditText mStore;
     private EditText mAddress;
     private Button mAddButton;
@@ -68,6 +69,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
         mItem = (EditText)findViewById(R.id.itemEdit);
         mPrice = (EditText)findViewById(R.id.priceEdit);
         mQuant = (EditText)findViewById(R.id.quantEdit);
+        mUnit = (EditText)findViewById(R.id.unitEdit);
         mStore = (EditText)findViewById(R.id.storeEdit);
         mAddress = (EditText)findViewById(R.id.addressEdit);
         mAddButton = (Button) findViewById(R.id.addButton);
@@ -194,9 +196,12 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                 String str = mQuant.getText().toString();
 
                 if(mQuant.getText().toString().equals("")) {
-                    mQuant.setError("Input is required!");
-                    mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("\\d+[.]?\\d*")) {
+                    mQuant.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                    mQuant.setError(null);
+//                    mQuant.setError("Input is required!");
+//                    mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
+                } else
+                if (!str.matches("\\d+[.]?\\d*")) {
                     mQuant.setError("Only numbers are allowed!");
                     mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
@@ -207,6 +212,31 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
 
             @Override
             public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mUnit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String str = mUnit.getText().toString();
+
+                if (!str.matches("[a-zA-Z ]*")) {
+                    mUnit.setError("Only letters are allowed!");
+                    mUnit.setBackgroundColor(getResources().getColor(R.color.transred));
+                } else  {
+                    mUnit.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                    mUnit.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -332,7 +362,8 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
 
                     ParseStore store = new ParseStore(mStore.getText().toString(), mAddress.getText().toString(),
                             new ParseGeoPoint(lat, lon));
-                    ParseItem item = new ParseItem(mItem.getText().toString(), "Label", mQuant.getText().toString());
+                    ParseItem item = new ParseItem(mItem.getText().toString(), mUnit.getText().toString(),
+                            mQuant.getText().toString());
                     ParsePrice price = new ParsePrice(mPrice.getText().toString(), item, store);
 
                     Log.d("add", "adding dummy data");

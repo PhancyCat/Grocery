@@ -55,7 +55,8 @@
                 android:layout_alignRight="@+id/addButton"
                 android:layout_alignEnd="@+id/addButton"
                 android:singleLine="true"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:inputType="text|textCapWords" />
 
         </LinearLayout>
 
@@ -117,18 +118,62 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/quantEdit"
                 android:layout_toStartOf="@+id/quantEdit"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp" />
 
-            <EditText
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:ems="10"
-                android:id="@+id/quantEdit"
-                android:width="250dp"
-                android:layout_alignBottom="@+id/quantTag"
-                android:layout_alignLeft="@+id/priceEdit"
-                android:layout_alignStart="@+id/priceEdit" />
+                android:layout_weight="0.5">
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/quantEdit"
+                    android:width="250dp"
+                    android:layout_alignBottom="@+id/quantTag"
+                    android:layout_alignLeft="@+id/priceEdit"
+                    android:layout_alignStart="@+id/priceEdit" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Amount"
+                    android:id="@+id/amountLabel"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5" >
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/unitEdit"
+                    android:width="250dp"
+                    android:layout_alignBottom="@+id/quantTag"
+                    android:layout_alignLeft="@+id/priceEdit"
+                    android:layout_alignStart="@+id/priceEdit"
+                    android:inputType="text|textNoSuggestions" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Unit Name"
+                    android:id="@+id/unitLabel"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
@@ -165,7 +210,7 @@
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPostalAddress"
+                android:inputType="text|textCapWords|textPostalAddress"
                 android:ems="10"
                 android:id="@+id/storeEdit"
                 android:layout_alignBottom="@+id/storeTag"
@@ -199,7 +244,7 @@
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPostalAddress"
+                android:inputType="text|textNoSuggestions|textCapWords|textPostalAddress"
                 android:ems="10"
                 android:id="@+id/addressEdit"
                 android:layout_alignTop="@+id/addressTag"
