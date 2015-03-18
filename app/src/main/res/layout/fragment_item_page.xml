@@ -45,9 +45,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_gravity="center" />
 
-            <EditText
+            <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:id="@+id/itemEdit"
                 android:width="250dp"
                 android:layout_alignTop="@+id/itemTag"
@@ -89,7 +89,7 @@
                 android:layout_gravity="center" />
 
             <EditText
-                android:layout_width="fill_parent"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:ems="10"
@@ -98,6 +98,12 @@
                 android:layout_toRightOf="@+id/priceTag"
                 android:layout_toEndOf="@+id/priceTag"
                 android:width="250dp" />
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Update"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -127,9 +133,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5">
 
-                <EditText
+                <TextView
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:inputType="numberDecimal"
                     android:ems="10"
                     android:id="@+id/quantEdit"
@@ -154,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5" >
 
-                <EditText
+                <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -207,7 +213,7 @@
                 android:layout_alignEnd="@+id/quantTag"
                 android:layout_gravity="center" />
 
-            <EditText
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text|textCapWords|textPostalAddress"
@@ -241,7 +247,7 @@
                 android:layout_alignEnd="@+id/storeTag"
                 android:layout_gravity="center" />
 
-            <EditText
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text|textNoSuggestions|textCapWords|textPostalAddress"
