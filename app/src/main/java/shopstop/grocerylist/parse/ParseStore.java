@@ -24,8 +24,8 @@ public class ParseStore {
     }
 
     public ParseStore(ParseObject parseObject, ParseGeoPoint origin) {
-        this.name = WordUtils.capitalizeFully(parseObject.getString("name"));
-        this.address = WordUtils.capitalizeFully(parseObject.getString("address"));
+        this.name = parseObject.getString("name");
+        this.address = parseObject.getString("address");
         this.coordinate = parseObject.getParseGeoPoint("coordinate");
         this.distance = parseObject.getParseGeoPoint("coordinate").distanceInMilesTo(origin);
     }

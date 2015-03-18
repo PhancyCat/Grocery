@@ -16,8 +16,9 @@ public class ParseItem {
     private String unitName;
     private BigDecimal unitCount;
     private BigDecimal price;
+    private String barcode;
 
-    public ParseItem(String name, String unitName, String unitCount) {
+    public ParseItem(String name, String unitName, String unitCount, String barcode) {
         this.name = WordUtils.capitalizeFully(name);
 
         if (unitName == null) {
@@ -33,12 +34,15 @@ public class ParseItem {
         else {
             this.unitCount = new BigDecimal(unitCount);
         }
+
+        this.barcode = barcode;
     }
 
     public ParseItem(ParseObject parseObject) {
-        this.name = WordUtils.capitalizeFully(parseObject.getString("name"));
-        this.unitName = parseObject.getString("unitName").toLowerCase();
+        this.name = parseObject.getString("name");
+        this.unitName = parseObject.getString("unitName");
         this.unitCount = new BigDecimal(parseObject.getString("unitCount"));
+        this.barcode = parseObject.getString("barcode");
     }
 
     public String getName() {
@@ -55,6 +59,10 @@ public class ParseItem {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public String getBarcode() {
+        return barcode;
     }
 
     public List<String> getTags() {

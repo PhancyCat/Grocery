@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.*;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,9 +33,11 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import shopstop.grocerylist.parse.ParseObjectHandler;
 import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
+import shopstop.grocerylist.tasks.SearchBarcodeTask;
 
 public class MainSearch extends ActionBarActivity implements HTTPResponse {
 
@@ -106,24 +110,6 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
 //        });
 
     }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            HttpClient client = new DefaultHttpClient();
-            Log.d("response", scanResult.toString());
-            String url = "http://api.upcdatabase.org/json/" + api_key + "/" + scanResult.getContents();
-            barcode = scanResult.getContents();
-            Log.d("Trying to get this", url);
-//            new GetHTTPBarcode().execute(url);
-            GetBarcode task = new GetBarcode(this);
-            task.execute(url);
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -319,18 +305,52 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         });
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            HttpClient client = new DefaultHttpClient();
+            Log.d("response", scanResult.toString());
+            String url = "http://api.upcdatabase.org/json/" + api_key + "/" + scanResult.getContents();
+            barcode = scanResult.getContents();
+            Log.d("Trying to get this", url);
+//            new GetHTTPBarcode().execute(url);
+            GetBarcode task = new GetBarcode(this);
+            task.execute(url);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void postResult(JSONObject result) {
         try {
             String name = result.get("itemname").toString();
-            String description = result.get("description").toString();
+//            String description = result.get("description").toString();
             if (!name.isEmpty()) {
                 mFindItem.setText(name);
                 barcode = result.get("number").toString();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
             }
-        } catch (JSONException e) {
+
+            ParseObjectHandler handler = new ParseObjectHandler() {
+                @Override
+                public void onCallComplete(ParseObject parseObject) {
+                    if (parseObject == null) {
+                        Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        mFindItem.setText(parseObject.getString("itemName"));
+                    }
+                }
+            };
+
+            SearchBarcodeTask task = new SearchBarcodeTask(handler, barcode);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
             mFindItem.getText().clear();
             barcode = null;

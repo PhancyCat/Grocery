@@ -37,6 +37,7 @@ public class AddItemTask extends AsyncTask<String, String, String> {
             public void done(ParseObject parseObject, ParseException e) {
                 if (e == null) {
                     System.err.println("Item found in database");
+                    // TODO: Add barcode if one exists
                     handler.onCallComplete(parseObject);
                 }
                 else {
@@ -48,6 +49,7 @@ public class AddItemTask extends AsyncTask<String, String, String> {
                         itemObject.put("tags", item.getTags());
                         itemObject.put("unitName", item.getUnitName());
                         itemObject.put("unitCount", item.getUnitCount().toString());
+                        itemObject.put("barcode", item.getBarcode());
 
                         itemObject.saveInBackground(new SaveCallback() {
                             @Override

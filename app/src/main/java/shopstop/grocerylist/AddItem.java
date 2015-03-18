@@ -363,7 +363,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                     ParseStore store = new ParseStore(mStore.getText().toString(), mAddress.getText().toString(),
                             new ParseGeoPoint(lat, lon));
                     ParseItem item = new ParseItem(mItem.getText().toString(), mUnit.getText().toString(),
-                            mQuant.getText().toString());
+                            mQuant.getText().toString(), barcode);
                     ParsePrice price = new ParsePrice(mPrice.getText().toString(), item, store);
 
                     Log.d("add", "adding dummy data");
@@ -401,10 +401,12 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                 barcode = result.get("number").toString();
             }
             else {
-                Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
             mItem.getText().clear();
             barcode = null;
         }
