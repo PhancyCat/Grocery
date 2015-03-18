@@ -2,15 +2,18 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -75,7 +78,7 @@ public class StoreResults extends ActionBarActivity {
                 final ListView listView = (ListView) findViewById(R.id.listview_store_results);
 
                 listView.setAdapter(new ItemAdapter(act, items));
-                /*
+
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
                         Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
@@ -87,7 +90,7 @@ public class StoreResults extends ActionBarActivity {
                         startActivity(intent);
                     }
                 });
-                */
+
 
                 progress.dismiss();
             }
