@@ -34,11 +34,31 @@ public class AddItemTask extends AsyncTask<String, String, String> {
 
         itemQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
-            public void done(ParseObject parseObject, ParseException e) {
+            public void done(final ParseObject parseObject, ParseException e) {
                 if (e == null) {
                     System.err.println("Item found in database");
-                    // TODO: Add barcode if one exists
-                    handler.onCallComplete(parseObject);
+
+                    String barcode = item.getBarcode();
+
+                    if (barcode != null) {
+                        if (!barcode.equals(parseObject.getString("barcode"))) {
+                            parseObject.put("barcode", barcode);
+                            parseObject.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+                                        handler.onCallComplete(parseObject);
+                                    }
+                                    else {
+                                        Log.d("item", "Error: " + e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            handler.onCallComplete(parseObject);
+                        }
+                    }
                 }
                 else {
                     // If item does not exist, create it
