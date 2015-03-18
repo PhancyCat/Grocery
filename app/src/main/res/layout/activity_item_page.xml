@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show Map"
-                android:background="#ffeaeaea"
+                android:background="#00ffffff"
                 android:id="@+id/mapButton"
                 android:layout_gravity="center_horizontal|top" />
         </LinearLayout>

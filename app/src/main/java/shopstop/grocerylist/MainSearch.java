@@ -238,7 +238,10 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse{
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mLocation.getText().toString();
 
-                if (!str.matches("[a-zA-Z0-9., ]++")) {
+                if(mLocation.getText().toString().equals("")) {
+                    mLocation.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                    mLocation.setError(null);
+                } else if (!str.matches("[a-zA-Z0-9., ]++")) {
                     mLocation.setError("Only alphanumeric and special characters: ., are allowed!");
                     mLocation.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {

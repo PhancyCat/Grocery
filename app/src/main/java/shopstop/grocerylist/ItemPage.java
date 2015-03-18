@@ -10,8 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class ItemPage extends ActionBarActivity {
+
+    private TextView mItem;
+    private TextView mPrice;
+    private TextView mQuant;
+    private TextView mUnit;
+    private TextView mStore;
+    private TextView mAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +39,13 @@ public class ItemPage extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+
+        mItem = (EditText)findViewById(R.id.itemEdit);
+        mPrice = (EditText)findViewById(R.id.priceEdit);
+        mQuant = (EditText)findViewById(R.id.quantEdit);
+        mUnit = (EditText)findViewById(R.id.unitEdit);
+        mStore = (EditText)findViewById(R.id.storeEdit);
+        mAddress = (EditText)findViewById(R.id.addressEdit);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
