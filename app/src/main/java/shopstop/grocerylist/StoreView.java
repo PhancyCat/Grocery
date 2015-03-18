@@ -15,6 +15,7 @@ public class StoreView extends RelativeLayout {
     private TextView mNameView;
     private TextView mAddressView;
     private TextView mDistanceView;
+    private TextView mMinPriceView;
 
     public static StoreView inflate(ViewGroup parent) {
         StoreView itemView = (StoreView) LayoutInflater.from(parent.getContext())
@@ -40,12 +41,14 @@ public class StoreView extends RelativeLayout {
         mNameView = (TextView) findViewById(R.id.store_NameTextView);
         mAddressView = (TextView) findViewById(R.id.store_AddressTextView);
         mDistanceView = (TextView) findViewById(R.id.store_DistanceTextView);
+        mMinPriceView = (TextView) findViewById(R.id.store_MinPriceTextView);
     }
 
     public void setItem(Store item) {
         mNameView.setText(item.getName());
         mAddressView.setText(item.getAddress());
-        mDistanceView.setText(String.format("%.3f mi", item.getDistance()));
+        mDistanceView.setText(String.format("%.1f mi", item.getDistance()));
+        mMinPriceView.setText(String.format("$%.2f", item.getMinPrice()));
     }
 
     public TextView getNameView() {

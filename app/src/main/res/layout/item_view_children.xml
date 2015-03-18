@@ -3,27 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:padding="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight=".5">
+        android:layout_weight=".25">
 
         <TextView
             android:id="@+id/item_NameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title text"
-            />
+            android:text="itemName"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/item_QuantityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:text="some text"
+            android:text="quantity"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
@@ -33,14 +34,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight=".5">
+        android:layout_weight=".75">
 
         <TextView
             android:id="@+id/item_PriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="description text"
-            android:layout_alignParentTop="true"/>
+            android:text="$00.00"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right" />
+
+        <TextView
+            android:id="@+id/item_PerUnitTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$/unit"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right" />
 
     </LinearLayout>
 

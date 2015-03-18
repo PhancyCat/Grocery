@@ -21,6 +21,8 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import org.apache.commons.lang.WordUtils;
+
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -57,8 +59,8 @@ public class SearchResults extends ActionBarActivity {
 
         final ParseGeoPoint coordinate = new ParseGeoPoint(latitude, longitude);
 
-        getSupportActionBar().setTitle(itemName);
-        getSupportActionBar().setSubtitle("near " + location);
+        getSupportActionBar().setTitle(WordUtils.capitalizeFully(itemName));
+        getSupportActionBar().setSubtitle("Near: " + location);
 
         // Handle the query results
         ParseQueryHandler handler = new ParseQueryHandler() {
@@ -67,7 +69,7 @@ public class SearchResults extends ActionBarActivity {
                 System.err.println("----- call complete -----");
 
                 final List<ParseStore> results = groupResults(parseObjects, coordinate);
-                Collections.sort(results, new ParseStoreDistanceComparator());
+                Collections.sort(results, new ParseStoreComparator());
 
                 // Add stores to list
                 final List<Store> stores = new ArrayList<>();

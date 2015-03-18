@@ -19,7 +19,13 @@ public class ParseItem {
 
     public ParseItem(String name, String unitName, String unitCount) {
         this.name = WordUtils.capitalizeFully(name);
-        this.unitName = unitName.toLowerCase();
+
+        if (unitName == null) {
+            this.unitName = "unit";
+        }
+        else {
+            this.unitName = unitName.toLowerCase();
+        }
 
         if (unitCount == null) {
             this.unitCount = new BigDecimal("1");

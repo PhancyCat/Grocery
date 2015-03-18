@@ -2,18 +2,15 @@ package shopstop.grocerylist;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,18 +19,15 @@ import com.parse.ParseObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import shopstop.grocerylist.parse.ParseItem;
-import shopstop.grocerylist.parse.ParseItemPriceComparator;
-import shopstop.grocerylist.parse.ParsePrice;
+import shopstop.grocerylist.parse.ParseItemComparator;
 import shopstop.grocerylist.parse.ParseQueryHandler;
 import shopstop.grocerylist.tasks.SearchStoreTask;
-import shopstop.grocerylist.tasks.SearchTask;
 
 public class StoreResults extends ActionBarActivity {
     @Override
@@ -70,7 +64,7 @@ public class StoreResults extends ActionBarActivity {
                 List<ParseItem> results = groupResults(parseObjects);
                 List<Item> items = new ArrayList<>();
                 
-                Collections.sort(results, new ParseItemPriceComparator());
+                Collections.sort(results, new ParseItemComparator());
 
                 // Add items to list
                 for (ParseItem item : results) {
