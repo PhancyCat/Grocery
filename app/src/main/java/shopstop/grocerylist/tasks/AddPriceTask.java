@@ -26,8 +26,7 @@ public class AddPriceTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         final ParseObject priceObject = ParseObject.create("Price");
 
-        priceObject.put("amount", price.getAmount());
-        priceObject.put("isOnSale", price.getIsOnSale());
+        priceObject.put("amount", price.getAmount().toString());
 
         final ParseObjectHandler storeHandler = new ParseObjectHandler() {
             @Override

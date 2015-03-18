@@ -252,8 +252,8 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                 if(mAddress.getText().toString().equals("")) {
                     mAddress.setError("Input is required!");
                     mAddress.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 ]++")) {
-                    mAddress.setError("Only alphanumeric characters are allowed!");
+                } else if (!str.matches("[a-zA-Z0-9 .,]++")) {
+                    mAddress.setError("Only alphanumeric and special characters: ., are allowed!");
                     mAddress.setBackgroundColor(getResources().getColor(R.color.transred));
                 } else  {
                     mAddress.setBackgroundColor(getResources().getColor(R.color.transgreen));
@@ -282,7 +282,17 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
         final ParseObjectHandler handler = new ParseObjectHandler() {
             @Override
             public void onCallComplete(ParseObject parseObject) {
-                finish();
+                AlertDialog alertDialog = new AlertDialog.Builder(act).create();
+                alertDialog.setTitle("Success");
+                alertDialog.setMessage("The price for this item was added to the database!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                act.finish();
+                            }
+                        });
+                alertDialog.show();
             }
         };
         mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -323,7 +333,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                     ParseStore store = new ParseStore(mStore.getText().toString(), mAddress.getText().toString(),
                             new ParseGeoPoint(lat, lon));
                     ParseItem item = new ParseItem(mItem.getText().toString(), "Label", mQuant.getText().toString());
-                    ParsePrice price = new ParsePrice(mPrice.getText().toString(), false, item, store);
+                    ParsePrice price = new ParsePrice(mPrice.getText().toString(), item, store);
 
                     Log.d("add", "adding dummy data");
 

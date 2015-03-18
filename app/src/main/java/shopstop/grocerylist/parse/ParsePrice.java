@@ -7,24 +7,18 @@ import java.math.BigDecimal;
  */
 public class ParsePrice {
     private BigDecimal amount;
-    private boolean isOnSale;
 
     private ParseItem item;
     private ParseStore store;
 
-    public ParsePrice(String amount, boolean isOnSale, ParseItem item, ParseStore store) {
+    public ParsePrice(String amount, ParseItem item, ParseStore store) {
         this.amount = new BigDecimal(amount);
-        this.isOnSale = isOnSale;
         this.item = item;
         this.store = store;
     }
 
-    public String getAmount() {
-        return amount.toString();
-    }
-
-    public boolean getIsOnSale() {
-        return isOnSale;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public ParseItem getItem() {

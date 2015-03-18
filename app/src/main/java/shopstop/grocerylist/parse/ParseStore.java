@@ -3,6 +3,8 @@ package shopstop.grocerylist.parse;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
+import org.apache.commons.lang.WordUtils;
+
 import java.math.BigDecimal;
 
 /**
@@ -16,14 +18,14 @@ public class ParseStore {
     private BigDecimal minPrice;
 
     public ParseStore(String name, String address, ParseGeoPoint coordinate) {
-        this.name = name;
-        this.address = address;
+        this.name = WordUtils.capitalizeFully(name);
+        this.address = WordUtils.capitalizeFully(address);
         this.coordinate = coordinate;
     }
 
     public ParseStore(ParseObject parseObject, ParseGeoPoint origin) {
-        this.name = parseObject.getString("name");
-        this.address = parseObject.getString("address");
+        this.name = WordUtils.capitalizeFully(parseObject.getString("name"));
+        this.address = WordUtils.capitalizeFully(parseObject.getString("address"));
         this.coordinate = parseObject.getParseGeoPoint("coordinate");
         this.distance = parseObject.getParseGeoPoint("coordinate").distanceInMilesTo(origin);
     }

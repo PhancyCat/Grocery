@@ -30,7 +30,7 @@ public class AddItemTask extends AsyncTask<String, String, String> {
 
         itemQuery.whereEqualTo("name", item.getName());
         itemQuery.whereEqualTo("unitName", item.getUnitName());
-        itemQuery.whereEqualTo("unitCount", item.getUnitCount());
+        itemQuery.whereEqualTo("unitCount", item.getUnitCount().toString());
 
         itemQuery.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -47,7 +47,7 @@ public class AddItemTask extends AsyncTask<String, String, String> {
                         itemObject.put("name", item.getName());
                         itemObject.put("tags", item.getTags());
                         itemObject.put("unitName", item.getUnitName());
-                        itemObject.put("unitCount", item.getUnitCount());
+                        itemObject.put("unitCount", item.getUnitCount().toString());
 
                         itemObject.saveInBackground(new SaveCallback() {
                             @Override

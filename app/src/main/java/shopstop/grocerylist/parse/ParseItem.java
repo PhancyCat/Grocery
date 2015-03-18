@@ -2,6 +2,8 @@ package shopstop.grocerylist.parse;
 
 import com.parse.ParseObject;
 
+import org.apache.commons.lang.WordUtils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +18,8 @@ public class ParseItem {
     private BigDecimal price;
 
     public ParseItem(String name, String unitName, String unitCount) {
-        this.name = name;
-        this.unitName = unitName;
+        this.name = WordUtils.capitalizeFully(name);
+        this.unitName = unitName.toLowerCase();
 
         if (unitCount == null) {
             this.unitCount = new BigDecimal("1");
@@ -28,8 +30,8 @@ public class ParseItem {
     }
 
     public ParseItem(ParseObject parseObject) {
-        this.name = parseObject.getString("name");
-        this.unitName = parseObject.getString("unitName");
+        this.name = WordUtils.capitalizeFully(parseObject.getString("name"));
+        this.unitName = parseObject.getString("unitName").toLowerCase();
         this.unitCount = new BigDecimal(parseObject.getString("unitCount"));
     }
 
