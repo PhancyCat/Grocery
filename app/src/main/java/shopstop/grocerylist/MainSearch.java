@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,10 +36,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 import shopstop.grocerylist.parse.ParseObjectHandler;
-import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 import shopstop.grocerylist.tasks.SearchBarcodeTask;
@@ -282,23 +283,30 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             mGoogleApiClient);
                     double lat, lon;
-                    Geocoding gc = new Geocoding(MainSearch.this);
+                    Geocoder gc = new Geocoder(MainSearch.this);
                     if(!(mLocation.getText().toString().equals("") || mLocation.getError() != null)) {
-                        List<Address> addresses = gc.getCoord(mLocation.getText().toString(), MainSearch.this);
-                        Address address;
-                        if (addresses.isEmpty()) {
+                        try {
+                            List<Address> addresses = gc.getFromLocationName(mLocation.getText().toString(), 1);
+                            Address address;
+                            if (addresses.isEmpty()) {
+                                Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
+                                Log.d("not found!", "address not found!!!");
+                                return;
+                            }
+                            address = addresses.get(0);
+                            if (!address.hasLatitude() || !address.hasLongitude()) {
+                                Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
+                                Log.d("not found!", "address not found!!!");
+                                return;
+                            }
+                            lat = address.getLatitude();
+                            lon = address.getLongitude();
+                        }
+                        catch(IOException ex) {
                             Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
                             Log.d("not found!", "address not found!!!");
                             return;
                         }
-                        address = addresses.get(0);
-                        if (!address.hasLatitude() || !address.hasLongitude()) {
-                            Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
-                            Log.d("not found!", "address not found!!!");
-                            return;
-                        }
-                        lat = address.getLatitude();
-                        lon = address.getLongitude();
                     }
                     else {
                         if(mLastLocation != null) {
