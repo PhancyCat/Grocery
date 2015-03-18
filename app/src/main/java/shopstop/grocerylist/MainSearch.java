@@ -6,8 +6,8 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -36,21 +37,25 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 
 import shopstop.grocerylist.parse.ParseObjectHandler;
+import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 import shopstop.grocerylist.tasks.SearchBarcodeTask;
 
-public class MainSearch extends ActionBarActivity implements HTTPResponse {
+public class MainSearch extends ActionBarActivity implements HTTPResponse,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private EditText mFindItem;
     private EditText mLocation;
     private EditText mDistance;
     private Button  mSearchButton;
     private GoogleApiClient mGoogleApiClient;
+    public static final String TAG = MainSearch.class.getSimpleName();
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private String api_key = "b000281a6ef7ab7de23ce178afd6faf3";
     private String barcode;
 
@@ -70,6 +75,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         mSearchButton = (Button) findViewById(R.id.searchButton);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
@@ -153,6 +160,44 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(TAG, "Location services connected.");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services suspended. Please reconnect.");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
     }
 
     /**
@@ -283,49 +328,27 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             mGoogleApiClient);
                     double lat, lon;
-                    Geocoder gc = new Geocoder(MainSearch.this);
+                    Geocoding gc = new Geocoding(MainSearch.this);
                     if(!(mLocation.getText().toString().equals("") || mLocation.getError() != null)) {
-                        try {
-                            List<Address> addresses = gc.getFromLocationName(mLocation.getText().toString(), 1);
-                            Address address;
-                            if (addresses.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
-                                Log.d("not found!", "address not found!!!");
-                                return;
-                            }
-                            address = addresses.get(0);
-                            if (!address.hasLatitude() || !address.hasLongitude()) {
-                                Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
-                                Log.d("not found!", "address not found!!!");
-                                return;
-                            }
-                            lat = address.getLatitude();
-                            lon = address.getLongitude();
-                        }
-                        catch(IOException ex) {
+                        List<Address> addresses = gc.getCoord(mLocation.getText().toString(), MainSearch.this);
+                        Address address;
+                        if (addresses.isEmpty()) {
                             Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
                             Log.d("not found!", "address not found!!!");
                             return;
                         }
-                    }
-                    else {
-                        if(mLastLocation != null) {
-                            lat = (mLastLocation.getLatitude());
-                            lon = (mLastLocation.getLongitude());
-                        }
-                        else {
-                            AlertDialog alertDialog = new AlertDialog.Builder(act).create();
-                            alertDialog.setTitle("Error");
-                            alertDialog.setMessage("Could not use current location. Please enter location.");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
+                        address = addresses.get(0);
+                        if (!address.hasLatitude() || !address.hasLongitude()) {
+                            Toast.makeText(getApplicationContext(), "Address not found", Toast.LENGTH_LONG).show();
+                            Log.d("not found!", "address not found!!!");
                             return;
                         }
+                        lat = address.getLatitude();
+                        lon = address.getLongitude();
+                    }
+                    else {
+                        lat = gc.getGPS()[0];
+                        lon = gc.getGPS()[1];
                     }
 
                     Intent intent = new Intent(getApplication(), SearchResults.class);
