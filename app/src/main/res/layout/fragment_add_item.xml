@@ -7,7 +7,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.shopstop.grocerylist.AddItem$PlaceholderFragment"
-    android:id="@+id/addItemLayout">
+    android:id="@+id/addItemLayout"
+    android:background="@drawable/paper_add">
 
     <LinearLayout
         android:orientation="vertical"
@@ -43,7 +44,8 @@
                 android:id="@+id/itemTag"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/main_green" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -78,7 +80,8 @@
                 android:layout_below="@+id/itemEdit"
                 android:layout_alignRight="@+id/itemTag"
                 android:layout_alignEnd="@+id/itemTag"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/main_green" />
 
             <TextView
                 android:layout_width="16dp"
@@ -119,7 +122,8 @@
                 android:layout_toLeftOf="@+id/quantEdit"
                 android:layout_toStartOf="@+id/quantEdit"
                 android:layout_gravity="center"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:textColor="@color/main_green" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -205,7 +209,8 @@
                 android:layout_below="@+id/quantTag"
                 android:layout_alignRight="@+id/quantTag"
                 android:layout_alignEnd="@+id/quantTag"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/main_green" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -239,7 +244,8 @@
                 android:layout_below="@+id/storeTag"
                 android:layout_alignRight="@+id/storeTag"
                 android:layout_alignEnd="@+id/storeTag"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/main_green" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -263,7 +269,9 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/main_green"
+            android:background="@color/semitrans_grey"/>
     </LinearLayout>
 
 </RelativeLayout>

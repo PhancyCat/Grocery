@@ -26,7 +26,8 @@
         android:width="200dp"
         android:layout_below="@+id/item"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="117dp" />
+        android:layout_marginTop="117dp"
+        android:textColor="@color/main_green" />
 
     <Button
         android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
         android:layout_alignLeft="@+id/scannerSearchButton"
         android:layout_alignStart="@+id/scannerSearchButton"
         android:layout_marginTop="48dp"
-        android:width="200dp" />
+        android:width="200dp"
+        android:textColor="@color/main_green" />
 
 
 </RelativeLayout>

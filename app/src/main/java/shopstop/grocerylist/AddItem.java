@@ -426,4 +426,12 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.animator.downin, R.animator.downout);
+
+        return;
+    }
 }

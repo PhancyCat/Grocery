@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,6 +141,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         if (id == R.id.action_add) {
             Intent intent = new Intent(getApplication(), AddItem.class);
             startActivity(intent);
+
+            overridePendingTransition(R.animator.downin, R.animator.downout);
         }
 
         if (id == R.id.action_scan) {
@@ -340,6 +343,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
                     intent.putExtra("radius", Double.parseDouble(mDistance.getText().toString()));
 
                     startActivity(intent);
+
+                    overridePendingTransition(R.animator.upin, R.animator.upout);
                 }
             }
         });

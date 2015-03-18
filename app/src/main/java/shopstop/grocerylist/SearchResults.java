@@ -182,4 +182,12 @@ public class SearchResults extends ActionBarActivity {
             return rootView;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.animator.upin, R.animator.upout);
+
+        return;
+    }
 }
