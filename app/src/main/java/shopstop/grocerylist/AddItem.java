@@ -49,13 +49,13 @@ import shopstop.grocerylist.tasks.SearchBarcodeTask;
 public class AddItem extends ActionBarActivity implements HTTPResponse {
 
     private EditText mItem;
+    private EditText mBarcode;
     private EditText mPrice;
     private EditText mQuant;
     private EditText mUnit;
     private EditText mStore;
     private EditText mAddress;
     private Button mAddButton;
-    private Button mBarcode;
     private String barcode;
     private String api_key = "b000281a6ef7ab7de23ce178afd6faf3";
 
@@ -69,13 +69,13 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
         actionBar.setTitle("Add Price");
 
         mItem = (EditText)findViewById(R.id.itemEdit);
+        mBarcode = (EditText)findViewById(R.id.barcodeEdit);
         mPrice = (EditText)findViewById(R.id.priceEdit);
         mQuant = (EditText)findViewById(R.id.quantEdit);
         mUnit = (EditText)findViewById(R.id.unitEdit);
         mStore = (EditText)findViewById(R.id.storeEdit);
         mAddress = (EditText)findViewById(R.id.addressEdit);
         mAddButton = (Button) findViewById(R.id.addButton);
-//        mBarcode = (Button) findViewById(R.id.addBarcode);
 
         barcode = null;
         setListeners();
@@ -141,20 +141,48 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mItem.getText().toString();
 
-                if(mItem.getText().toString().equals("")) {
+                if (str.equals("")) {
                     mItem.setError("Input is required!");
                     mItem.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("^[a-zA-Z0-9][a-zA-Z0-9 .,\\-\\/\\(\\)]++")) {
-                    mItem.setError("Only alphanumeric characters are allowed!");
+                }
+                else if (!str.matches("^[a-zA-Z0-9][a-zA-Z0-9 .,'%\\-\\/\\(\\)]++")) {
+                    mItem.setError("Only alphanumeric and special characters: .,'% are allowed!");
                     mItem.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mItem.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else {
                     mItem.setError(null);
+                    mItem.setBackgroundColor(getResources().getColor(R.color.transgreen));
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        mBarcode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String str = mBarcode.getText().toString();
+
+                if (str.equals("") || str.matches("[a-zA-Z0-9 -]*")) {
+                    mBarcode.setError(null);
+                    mBarcode.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else {
+                    mBarcode.setError("Only alphanumeric and special characters: - are allowed!");
+                    mBarcode.setBackgroundColor(getResources().getColor(R.color.transred));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -169,15 +197,17 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mPrice.getText().toString();
 
-                if(mPrice.getText().toString().equals("")) {
+                if (str.equals("")) {
                     mPrice.setError("Input is required!");
                     mPrice.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("\\d+[.]?\\d*")) {
+                }
+                else if (!str.matches("\\d+[.]?\\d*")) {
                     mPrice.setError("Only numbers are allowed!");
                     mPrice.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mPrice.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else  {
                     mPrice.setError(null);
+                    mPrice.setBackgroundColor(getResources().getColor(R.color.transgreen));
                 }
             }
 
@@ -197,18 +227,13 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mQuant.getText().toString();
 
-                if(mQuant.getText().toString().equals("")) {
-                    mQuant.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                if (str.equals("") || str.matches("\\d+[.]?\\d*")) {
                     mQuant.setError(null);
-//                    mQuant.setError("Input is required!");
-//                    mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else
-                if (!str.matches("\\d+[.]?\\d*")) {
+                    mQuant.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else {
                     mQuant.setError("Only numbers are allowed!");
                     mQuant.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mQuant.setBackgroundColor(getResources().getColor(R.color.transgreen));
-                    mQuant.setError(null);
                 }
             }
 
@@ -228,12 +253,13 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String str = mUnit.getText().toString();
 
-                if (!str.matches("[a-zA-Z ]*")) {
+                if (str.equals("") || str.matches("[a-zA-Z ]*")) {
+                    mUnit.setError(null);
+                    mUnit.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else {
                     mUnit.setError("Only letters are allowed!");
                     mUnit.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mUnit.setBackgroundColor(getResources().getColor(R.color.transgreen));
-                    mUnit.setError(null);
                 }
             }
 
@@ -253,15 +279,17 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mStore.getText().toString();
 
-                if(mStore.getText().toString().equals("")) {
+                if (str.equals("")) {
                     mStore.setError("Input is required!");
                     mStore.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 ]++")) {
+                }
+                else if (!str.matches("[a-zA-Z0-9 ]++")) {
                     mStore.setError("Only alphanumeric characters are allowed!");
                     mStore.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mStore.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else  {
                     mStore.setError(null);
+                    mStore.setBackgroundColor(getResources().getColor(R.color.transgreen));
                 }
             }
 
@@ -281,15 +309,17 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = mAddress.getText().toString();
 
-                if(mAddress.getText().toString().equals("")) {
+                if (str.equals("")) {
                     mAddress.setError("Input is required!");
                     mAddress.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else if (!str.matches("[a-zA-Z0-9 .,]++")) {
+                }
+                else if (!str.matches("[a-zA-Z0-9 .,]++")) {
                     mAddress.setError("Only alphanumeric and special characters: ., are allowed!");
                     mAddress.setBackgroundColor(getResources().getColor(R.color.transred));
-                } else  {
-                    mAddress.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                }
+                else  {
                     mAddress.setError(null);
+                    mAddress.setBackgroundColor(getResources().getColor(R.color.transgreen));
                 }
             }
 
@@ -315,9 +345,11 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                 alertDialog.show();
             }
         };
+
         mAddButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mItem.getText().toString().equals("") || mItem.getError() != null ||
+                        mBarcode.getError() != null ||
                         mPrice.getText().toString().equals("") || mPrice.getError() != null ||
                         mQuant.getText().toString().equals("") || mQuant.getError() != null ||
                         mStore.getText().toString().equals("") || mStore.getError() != null ||
@@ -353,7 +385,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
                     ParseStore store = new ParseStore(mStore.getText().toString(), mAddress.getText().toString(),
                             new ParseGeoPoint(lat, lon));
                     ParseItem item = new ParseItem(mItem.getText().toString(), mUnit.getText().toString(),
-                            mQuant.getText().toString(), barcode);
+                            mQuant.getText().toString(), mBarcode.getText().toString());
                     ParsePrice price = new ParsePrice(mPrice.getText().toString(), item, store);
 
                     Log.d("add", "adding dummy data");
@@ -365,6 +397,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             }
         });
     }
+    
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
@@ -375,55 +408,65 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
 //            new GetHTTPBarcode().execute(url);
             GetBarcode task = new GetBarcode(this);
             task.execute(url);
-
         }
         else {
             Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void postResult(JSONObject result) {
+    public void postResult(final JSONObject result) {
         if (barcode != null) {
-            boolean searchParse = true;
+            mBarcode.setText(barcode);
 
-            try {
-                String name = result.get("itemname").toString();
-                Log.d("result", name);
-                if (!name.isEmpty()) {
-                    mItem.setText(name);
-                    mItem.setEnabled(false);
-                    searchParse = false;
-                }
-            }
-            catch (JSONException e) {
+            final ProgressDialog progress = new ProgressDialog(this);
 
-            }
+            // Now search Parse for the item
+            ParseObjectHandler handler = new ParseObjectHandler() {
+                @Override
+                public void onCallComplete(ParseObject parseObject) {
+                    progress.dismiss();
 
-            if (searchParse) {
-                final ProgressDialog progress = new ProgressDialog(this);
-
-                // Now search Parse for the item
-                ParseObjectHandler handler = new ParseObjectHandler() {
-                    @Override
-                    public void onCallComplete(ParseObject parseObject) {
-                        progress.dismiss();
-
-                        if (parseObject == null) {
-                            Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
-                        } else {
-                            mItem.setText(parseObject.getString("name"));
-                            mQuant.setText(parseObject.getString("unitCount"));
-                            mUnit.setText(parseObject.getString("unitName"));
+                    if (parseObject == null) {
+                        try {
+                            String name = result.get("itemname").toString();
+                            Log.d("result", name);
+                            if (!name.isEmpty()) {
+                                mItem.setText(name);
+                                mQuant.setText("");
+                                mUnit.setText("");
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),
+                                        "Item not found in database.", Toast.LENGTH_LONG).show();
+                                mItem.setText("");
+                                mQuant.setText("");
+                                mUnit.setText("");
+                            }
+                        }
+                        catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Item not found in database.", Toast.LENGTH_LONG).show();
+                            mItem.setText("");
+                            mQuant.setText("");
+                            mUnit.setText("");
                         }
                     }
-                };
+                    else {
+                        mItem.setText(parseObject.getString("name"));
+                        mQuant.setText(parseObject.getString("unitCount"));
+                        mUnit.setText(parseObject.getString("unitName"));
+                    }
+                }
+            };
 
-                progress.setMessage("Searching for item...");
-                progress.show();
+            progress.setMessage("Searching for item...");
+            progress.show();
 
-                SearchBarcodeTask parseTask = new SearchBarcodeTask(handler, barcode);
-                parseTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            SearchBarcodeTask parseTask = new SearchBarcodeTask(handler, barcode);
+            parseTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else {
+            mBarcode.setText("");
         }
     }
 

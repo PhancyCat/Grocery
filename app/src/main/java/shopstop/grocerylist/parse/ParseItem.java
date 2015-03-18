@@ -20,21 +20,8 @@ public class ParseItem {
 
     public ParseItem(String name, String unitName, String unitCount, String barcode) {
         this.name = WordUtils.capitalizeFully(name);
-
-        if (unitName == null) {
-            this.unitName = "unit";
-        }
-        else {
-            this.unitName = unitName.toLowerCase();
-        }
-
-        if (unitCount == null) {
-            this.unitCount = new BigDecimal("1");
-        }
-        else {
-            this.unitCount = new BigDecimal(unitCount);
-        }
-
+        this.unitName = "unit";
+        this.unitCount = new BigDecimal(unitCount);
         this.barcode = barcode;
     }
 
