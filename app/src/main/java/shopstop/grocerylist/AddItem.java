@@ -3,6 +3,7 @@ package shopstop.grocerylist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -42,6 +43,7 @@ import shopstop.grocerylist.tasks.AddPriceTask;
 import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
+import shopstop.grocerylist.tasks.SearchBarcodeTask;
 
 
 public class AddItem extends ActionBarActivity implements HTTPResponse {
@@ -297,18 +299,6 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
             }
         });
 
-//        mBarcode.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                IntentIntegrator integrator = new IntentIntegrator(AddItem.this);
-//                integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-//                integrator.setPrompt("Scan a barcode");
-//                integrator.setResultDisplayDuration(0);
-//                integrator.setWide();  // Wide scanning rectangle, may work better for 1D barcodes
-//                integrator.setCameraId(0);  // Use a specific camera of the device
-//                integrator.initiateScan();
-//            }
-//        });
-
         final ParseObjectHandler handler = new ParseObjectHandler() {
             @Override
             public void onCallComplete(ParseObject parseObject) {
@@ -385,6 +375,7 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
 //            new GetHTTPBarcode().execute(url);
             GetBarcode task = new GetBarcode(this);
             task.execute(url);
+
         }
         else {
             Toast.makeText(getApplicationContext(), "no result", Toast.LENGTH_LONG).show();
@@ -392,23 +383,47 @@ public class AddItem extends ActionBarActivity implements HTTPResponse {
     }
 
     public void postResult(JSONObject result) {
-        try {
-            String name = result.get("itemname").toString();
-            Log.d("result", name);
-            if (!name.isEmpty()) {
-                mItem.setText(name);
-                mItem.setEnabled(false);
-                barcode = result.get("number").toString();
+        if (barcode != null) {
+            boolean searchParse = true;
+
+            try {
+                String name = result.get("itemname").toString();
+                Log.d("result", name);
+                if (!name.isEmpty()) {
+                    mItem.setText(name);
+                    mItem.setEnabled(false);
+                    searchParse = false;
+                }
             }
-            else {
-                Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
+            catch (JSONException e) {
+
             }
-        }
-        catch (JSONException e) {
-            Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-            mItem.getText().clear();
-            barcode = null;
+
+            if (searchParse) {
+                final ProgressDialog progress = new ProgressDialog(this);
+
+                // Now search Parse for the item
+                ParseObjectHandler handler = new ParseObjectHandler() {
+                    @Override
+                    public void onCallComplete(ParseObject parseObject) {
+                        progress.dismiss();
+
+                        if (parseObject == null) {
+                            Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+                        } else {
+                            mItem.setText(parseObject.getString("name"));
+                            mQuant.setText(parseObject.getString("unitCount"));
+                            mUnit.setText(parseObject.getString("unitName"));
+                        }
+                    }
+                };
+
+                progress.setMessage("Searching for item...");
+                progress.show();
+
+                SearchBarcodeTask parseTask = new SearchBarcodeTask(handler, barcode);
+                parseTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 }

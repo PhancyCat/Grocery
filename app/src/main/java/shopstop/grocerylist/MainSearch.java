@@ -3,6 +3,7 @@ package shopstop.grocerylist;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -132,7 +133,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
         }
 
         if (id == R.id.action_scan) {
-            IntentIntegrator integrator = new IntentIntegrator(this);
+            IntentIntegrator integrator = new IntentIntegrator(MainSearch.this);
             integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
             integrator.setPrompt("Scan a barcode");
             integrator.setResultDisplayDuration(0);
@@ -323,39 +324,29 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse {
     }
 
     public void postResult(JSONObject result) {
-        try {
-            String name = result.get("itemname").toString();
-//            String description = result.get("description").toString();
-            if (!name.isEmpty()) {
-                mFindItem.setText(name);
-                barcode = result.get("number").toString();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
-            }
+        if (barcode != null) {
+            final ProgressDialog progress = new ProgressDialog(this);
 
+            // Now search Parse for the item
             ParseObjectHandler handler = new ParseObjectHandler() {
                 @Override
                 public void onCallComplete(ParseObject parseObject) {
+                    progress.dismiss();
+
                     if (parseObject == null) {
-                        Toast.makeText(getApplicationContext(), "Item name not found in database.", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        mFindItem.setText(parseObject.getString("itemName"));
+                        Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
+                    } else {
+                        mFindItem.setText(parseObject.getString("name"));
                     }
                 }
             };
 
-            SearchBarcodeTask task = new SearchBarcodeTask(handler, barcode);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Item not found in database.", Toast.LENGTH_LONG).show();
-            mFindItem.getText().clear();
-            barcode = null;
+            progress.setMessage("Searching for item...");
+            progress.show();
+
+            SearchBarcodeTask parseTask = new SearchBarcodeTask(handler, barcode);
+            parseTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
 
 }
