@@ -2,11 +2,16 @@ package shopstop.grocerylist;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class StoreMap extends ActionBarActivity {
@@ -17,14 +22,21 @@ public class StoreMap extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.maps))
                 .getMap();
 
         map.setMyLocationEnabled(true);
 
+        double lat = getIntent().getDoubleExtra("lat", 0);
+        double lon = getIntent().getDoubleExtra("lon", 0);
+        String name = getIntent().getStringExtra("name");
+        setTitle(name);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 14.0f));
 
-//        map.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(xxxx, xxxx), 14.0f) );
-
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title(name));
 
     }
 

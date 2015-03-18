@@ -36,6 +36,11 @@ public class ItemPage extends ActionBarActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), StoreMap.class);
+
+                intent.putExtra("lat", getIntent().getDoubleExtra("lat", 0));
+                intent.putExtra("lon", getIntent().getDoubleExtra("lon", 0));
+                intent.putExtra("name", getIntent().getStringExtra("name"));
+
                 startActivity(intent);
             }
         });

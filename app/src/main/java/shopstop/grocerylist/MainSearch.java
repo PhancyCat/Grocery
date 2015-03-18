@@ -6,7 +6,9 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Address;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -24,6 +26,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.parse.Parse;
@@ -41,12 +46,17 @@ import shopstop.grocerylist.tasks.GetBarcode;
 import shopstop.grocerylist.tasks.HTTPResponse;
 import shopstop.grocerylist.tasks.SearchBarcodeTask;
 
-public class MainSearch extends ActionBarActivity implements HTTPResponse{
+public class MainSearch extends ActionBarActivity implements HTTPResponse,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private EditText mFindItem;
     private EditText mLocation;
     private EditText mDistance;
     private Button  mSearchButton;
+    private GoogleApiClient mGoogleApiClient;
+    public static final String TAG = MainSearch.class.getSimpleName();
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private String api_key = "b000281a6ef7ab7de23ce178afd6faf3";
     private String barcode;
 
@@ -64,6 +74,12 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse{
         mLocation = (EditText)findViewById(R.id.location);
         mDistance = (EditText)findViewById(R.id.disance);
         mSearchButton = (Button) findViewById(R.id.searchButton);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
 
 
         Bundle bundle = getIntent().getExtras();
@@ -147,6 +163,44 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(TAG, "Location services connected.");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services suspended. Please reconnect.");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
+        }
     }
 
     /**
@@ -261,7 +315,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse{
             @Override
             public void onClick(View view) {
                 if(mFindItem.getText().toString().equals("") || mFindItem.getError() != null ||
-                    mDistance.getText().toString().equals("")|| mDistance.getError() != null) {
+                        mDistance.getText().toString().equals("")|| mDistance.getError() != null) {
                     AlertDialog alertDialog = new AlertDialog.Builder(act).create();
                     alertDialog.setTitle("Error");
                     alertDialog.setMessage("Please check that you filled in the fields correctly.");
@@ -274,6 +328,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse{
                     alertDialog.show();
                 } else {
                     // Finds address when user clicks search
+                    Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            mGoogleApiClient);
                     double lat, lon;
                     Geocoding gc = new Geocoding(MainSearch.this);
                     if(!(mLocation.getText().toString().equals("") || mLocation.getError() != null)) {

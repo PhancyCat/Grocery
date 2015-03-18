@@ -1,8 +1,12 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,7 +21,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 
@@ -31,19 +38,18 @@ import java.util.Set;
 import shopstop.grocerylist.parse.ParseItem;
 import shopstop.grocerylist.parse.ParseItemComparator;
 import shopstop.grocerylist.parse.ParseQueryHandler;
+import shopstop.grocerylist.tasks.Geocoding;
 import shopstop.grocerylist.tasks.SearchStoreTask;
 
 public class StoreResults extends ActionBarActivity {
     double lat;
     double lon;
+    String name;
 
-    private Button mMapStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_results);
-
-        mMapStore = (Button)findViewById(R.id.map_icon);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -51,9 +57,6 @@ public class StoreResults extends ActionBarActivity {
                     .commit();
         }
 
-
-
-        setListeners();
     }
 
     @Override
@@ -67,6 +70,9 @@ public class StoreResults extends ActionBarActivity {
         final String itemName = getIntent().getStringExtra("itemName");
         final String storeName = getIntent().getStringExtra("storeName");
         final String storeAddress = getIntent().getStringExtra("storeAddress");
+        lat = getIntent().getDoubleExtra("lat", 0);
+        lon = getIntent().getDoubleExtra("lon", 0);
+        name = storeName;
 
         getSupportActionBar().setTitle(storeName);
         getSupportActionBar().setSubtitle(storeAddress);
@@ -90,19 +96,6 @@ public class StoreResults extends ActionBarActivity {
                 final ListView listView = (ListView) findViewById(R.id.listview_store_results);
 
                 listView.setAdapter(new ItemAdapter(act, items));
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-                        Log.i("HelloListView", "You clicked ParseItem: " + id + " at position:" + position);
-                        // Then you start a new Activity via Intent
-                        Intent intent = new Intent(listView.getContext(), ItemPage.class);
-                        intent.putExtra("position", position);
-                        // Or / And
-                        intent.putExtra("id", id);
-                        startActivity(intent);
-                    }
-                });
-
 
                 progress.dismiss();
             }
@@ -156,6 +149,16 @@ public class StoreResults extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.map_icon) {
+            Intent intent = new Intent(getApplication(), StoreMap.class);
+
+            intent.putExtra("lat", lat);
+            intent.putExtra("lon", lon);
+            intent.putExtra("name", name);
+
+            startActivity(intent);
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,9 +175,5 @@ public class StoreResults extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_store_results, container, false);
             return rootView;
         }
-    }
-
-    public void setListeners() {
-
     }
 }

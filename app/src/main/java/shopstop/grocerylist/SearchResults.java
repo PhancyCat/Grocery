@@ -90,7 +90,8 @@ public class SearchResults extends ActionBarActivity {
                         intent.putExtra("itemName", itemName);
                         intent.putExtra("storeName", stores.get(position).getName());
                         intent.putExtra("storeAddress", stores.get(position).getAddress());
-//                        intent.putExtra("lat", stores.get(position))
+                        intent.putExtra("lat", results.get(position).getCoordinate().getLatitude());
+                        intent.putExtra("lon", results.get(position).getCoordinate().getLongitude());
 
                         startActivity(intent);
                     }
