@@ -1,7 +1,9 @@
 package shopstop.grocerylist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,6 +102,18 @@ public class SearchResults extends ActionBarActivity {
                 });
 
                 progress.dismiss();
+                if(stores.isEmpty()) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(act).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("No items found for specified parameters.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
             }
         };
 

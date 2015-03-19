@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -264,8 +263,8 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse,
                 String str = mDistance.getText().toString();
 
                 if(mDistance.getText().toString().equals("")) {
-                    mDistance.setError(mDistance.getHint() + " is required!");
-                    mDistance.setBackgroundColor(getResources().getColor(R.color.transred));
+                    mDistance.setBackgroundColor(getResources().getColor(R.color.transgreen));
+                    mDistance.setError(null);
                 } else if (!str.matches("\\d+[.]?\\d*")) {
                     mDistance.setError("Only numbers are allowed!");
                     mDistance.setBackgroundColor(getResources().getColor(R.color.transred));
@@ -314,8 +313,7 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse,
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mFindItem.getText().toString().equals("") || mFindItem.getError() != null ||
-                        mDistance.getText().toString().equals("")|| mDistance.getError() != null) {
+                if(mFindItem.getText().toString().equals("") || mFindItem.getError() != null) {
                     AlertDialog alertDialog = new AlertDialog.Builder(act).create();
                     alertDialog.setTitle("Error");
                     alertDialog.setMessage("Please check that you filled in the fields correctly.");
@@ -363,7 +361,12 @@ public class MainSearch extends ActionBarActivity implements HTTPResponse,
                     // Set the location & radius
                     intent.putExtra("latitude", lat);
                     intent.putExtra("longitude", lon);
-                    intent.putExtra("radius", Double.parseDouble(mDistance.getText().toString()));
+                    if(mDistance.getText().toString().equals("")|| mDistance.getError() != null) {
+                        intent.putExtra("radius", 10.0);
+                    }
+                    else {
+                        intent.putExtra("radius", Double.parseDouble(mDistance.getText().toString()));
+                    }
 
                     startActivity(intent);
 
