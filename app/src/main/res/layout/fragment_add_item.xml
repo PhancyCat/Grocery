@@ -80,7 +80,8 @@
                 android:id="@+id/barcodeTag"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:textColor="@color/main_green" />
 
             <EditText
                 android:layout_width="fill_parent"
@@ -291,7 +292,8 @@
                 android:layout_toRightOf="@+id/addressTag"
                 android:layout_toEndOf="@+id/addressTag"
                 android:width="250dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:hint="123 Street Name, Zip Code" />
         </LinearLayout>
 
         <Button

@@ -62,7 +62,13 @@ public class SearchResults extends ActionBarActivity {
         final ParseGeoPoint coordinate = new ParseGeoPoint(latitude, longitude);
 
         getSupportActionBar().setTitle(WordUtils.capitalizeFully(itemName));
-        getSupportActionBar().setSubtitle("Near: " + location);
+
+        if (location.equals("")) {
+            getSupportActionBar().setSubtitle("Near: Current Location");
+        }
+        else {
+            getSupportActionBar().setSubtitle("Near: " + location);
+        }
 
         // Handle the query results
         ParseQueryHandler handler = new ParseQueryHandler() {
